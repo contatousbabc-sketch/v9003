@@ -1,0 +1,4008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARQV30 Enhanced v3.0 - Interface Aprimorada</title>
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/magnetic-ui.css') }}">
+
+    <style>
+        /* Aplicar classes do Magnetic UI */
+        .header {
+            @extend .glass;
+        }
+        
+        /* ✅ NOVO: Header compacto e discreto */
+        .compact-header {
+            padding: 15px 25px !important;
+            margin-bottom: 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .header-logo-large {
+            max-width: 120px;
+            max-height: 120px;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .header-logo-large:hover {
+            transform: scale(1.05);
+        }
+        
+        .header-info h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 600;
+            color: #007bff;
+        }
+        
+        .header-subtitle {
+            font-size: 0.9rem;
+            margin: 0;
+            opacity: 0.8;
+            color: #6c757d;
+        }
+        
+        .stats-compact {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .stat-compact {
+            font-size: 0.85rem;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-compact i {
+            color: #007bff;
+            font-size: 0.8rem;
+        }
+        
+        /* ✅ NOVO: Estilos para seção de resultados melhorada */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-action {
+            background: rgba(0, 123, 255, 0.1);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            color: #007bff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-action:hover {
+            background: rgba(0, 123, 255, 0.2);
+            border-color: rgba(0, 123, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .results-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn.magnetic-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #6c757d;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+        }
+        
+        .tab-btn.magnetic-btn:hover {
+            background: rgba(0, 123, 255, 0.1);
+            border-color: rgba(0, 123, 255, 0.3);
+            color: #007bff;
+            transform: translateY(-2px);
+        }
+        
+        .tab-btn.magnetic-btn.active {
+            background: rgba(0, 123, 255, 0.2);
+            border-color: rgba(0, 123, 255, 0.5);
+            color: #007bff;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* ✅ MELHORADO: Log de atividades aprimorado */
+        .activity-log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .log-header {
+            background: rgba(0, 123, 255, 0.1);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .log-header span {
+            font-weight: 600;
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-toggle-log {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-toggle-log:hover {
+            background: rgba(0, 123, 255, 0.2);
+        }
+        
+        .log-content {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px 20px;
+        }
+        
+        .log-entry {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-time {
+            color: #6c757d;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            min-width: 80px;
+        }
+        
+        .log-message {
+            color: #e9ecef;
+            flex: 1;
+        }
+        
+        .log-entry.success .log-message {
+            color: #28a745;
+        }
+        
+        .log-entry.warning .log-message {
+            color: #ffc107;
+        }
+        
+        .log-entry.error .log-message {
+            color: #dc3545;
+        }
+        
+        /* ✅ NOVO: Estilos para notificações aprimoradas */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px 20px;
+            color: white;
+            z-index: 10000;
+            min-width: 300px;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.3s ease;
+        }
+        
+        .notification.success {
+            border-color: rgba(40, 167, 69, 0.5);
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .notification.error {
+            border-color: rgba(220, 53, 69, 0.5);
+            background: rgba(220, 53, 69, 0.1);
+        }
+        
+        .notification.warning {
+            border-color: rgba(255, 193, 7, 0.5);
+            background: rgba(255, 193, 7, 0.1);
+        }
+        
+        .notification.info {
+            border-color: rgba(0, 123, 255, 0.5);
+            background: rgba(0, 123, 255, 0.1);
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .notification-content i {
+            font-size: 1.2rem;
+        }
+        
+        .notification.success .notification-content i {
+            color: #28a745;
+        }
+        
+        .notification.error .notification-content i {
+            color: #dc3545;
+        }
+        
+        .notification.warning .notification-content i {
+            color: #ffc107;
+        }
+        
+        .notification.info .notification-content i {
+            color: #007bff;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+        
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .config-section {
+            @extend .glass;
+        }
+        
+        .step-card {
+            @extend .glass;
+        }
+        
+        .progress-section {
+            @extend .glass;
+        }
+        
+        .sessions-container {
+            @extend .glass;
+        }
+        
+        /* ✅ MELHORADO: Estilos para barra de progresso aprimorada */
+        .progress-bar {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .progress-bar-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.3), transparent);
+            border-radius: inherit;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .progress-bar-container:hover .progress-bar-glow {
+            opacity: 1;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-percentage {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        /* ✅ NOVO: Estilos para métricas de qualidade */
+        .quality-metrics {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* ✅ NOVO: Estilos para gerenciamento de modelos */
+        .models-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .models-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .models-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #007bff;
+        }
+        
+        .models-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .models-tab {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e9ecef;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .models-tab:hover {
+            background: rgba(0, 123, 255, 0.1);
+            border-color: rgba(0, 123, 255, 0.3);
+        }
+        
+        .models-tab.active {
+            background: rgba(0, 123, 255, 0.2);
+            border-color: rgba(0, 123, 255, 0.5);
+            color: #007bff;
+        }
+        
+        .models-content {
+            display: none;
+        }
+        
+        .models-content.active {
+            display: block;
+        }
+        
+        .model-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .model-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 123, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .model-card.active {
+            border-color: rgba(40, 167, 69, 0.5);
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .model-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .model-info h4 {
+            margin: 0 0 8px 0;
+            color: #e9ecef;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .model-description {
+            color: #adb5bd;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .model-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .model-spec {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        .model-spec-label {
+            color: #6c757d;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .model-spec-value {
+            color: #e9ecef;
+            font-weight: 600;
+        }
+        
+        .model-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .model-btn {
+            background: rgba(0, 123, 255, 0.1);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            color: #007bff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .model-btn:hover {
+            background: rgba(0, 123, 255, 0.2);
+            border-color: rgba(0, 123, 255, 0.5);
+        }
+        
+        .model-btn.success {
+            background: rgba(40, 167, 69, 0.1);
+            border-color: rgba(40, 167, 69, 0.3);
+            color: #28a745;
+        }
+        
+        .model-btn.success:hover {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: rgba(40, 167, 69, 0.5);
+        }
+        
+        .model-btn.danger {
+            background: rgba(220, 53, 69, 0.1);
+            border-color: rgba(220, 53, 69, 0.3);
+            color: #dc3545;
+        }
+        
+        .model-btn.danger:hover {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: rgba(220, 53, 69, 0.5);
+        }
+        
+        .model-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .model-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .model-status.active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .model-status.available {
+            background: rgba(0, 123, 255, 0.2);
+            color: #007bff;
+            border: 1px solid rgba(0, 123, 255, 0.3);
+        }
+        
+        .model-status.downloading {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .models-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .models-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .models-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .models-stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .recommendation-card {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05));
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #007bff;
+            font-weight: 600;
+        }
+        
+        .recommendation-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-label {
+            color: #e9ecef;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .filter-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: rgba(0, 123, 255, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .download-progress {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .download-progress.active {
+            display: block;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-models {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .quality-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #007bff;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+        
+        .metric-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 0.3;
+            font-size: 1.2rem;
+        }
+
+        /* ✅ MELHORADO: Indicadores de etapa aprimorados */
+        .step-indicator-enhanced {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .step-indicator-enhanced.active {
+            border-color: #007bff;
+            background: rgba(0, 123, 255, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .step-indicator-enhanced.completed {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .step-indicator-enhanced.error {
+            border-color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+        }
+        
+        .step-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .step-status {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .step-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .step-progress::after {
+            content: '';
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #007bff, #28a745);
+            transition: width 0.3s ease;
+        }
+        
+        .step-indicator-enhanced.active .step-progress::after {
+            width: 100%;
+            animation: pulse-progress 2s infinite;
+        }
+        
+        @keyframes pulse-progress {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ✅ NOVO: Estilos para log de atividades */
+        .activity-log {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .log-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+        
+        .btn-toggle-log {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-toggle-log:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .log-content {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        
+        .log-entry {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
+            transition: background 0.2s ease;
+        }
+        
+        .log-entry:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .log-entry.new {
+            animation: highlight-new 1s ease;
+        }
+        
+        @keyframes highlight-new {
+            0% { background: rgba(0, 123, 255, 0.3); }
+            100% { background: transparent; }
+        }
+        
+        .log-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            min-width: 60px;
+        }
+        
+        .log-message {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .log-entry.success .log-message {
+            color: #28a745;
+        }
+        
+        .log-entry.error .log-message {
+            color: #dc3545;
+        }
+        
+        .log-entry.warning .log-message {
+            color: #ffc107;
+        }
+
+        /* ✅ NOVO: Classes de qualidade para métricas */
+        .metric-value.excellent {
+            color: #28a745 !important;
+        }
+        
+        .metric-value.good {
+            color: #17a2b8 !important;
+        }
+        
+        .metric-value.acceptable {
+            color: #ffc107 !important;
+        }
+        
+        .metric-value.poor {
+            color: #fd7e14 !important;
+        }
+        
+        .metric-value.critical {
+            color: #dc3545 !important;
+        }
+
+        /* ✅ NOVO: Responsividade para dispositivos móveis */
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .step-indicators {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .step-line {
+                width: 2px;
+                height: 20px;
+                transform: rotate(90deg);
+            }
+            
+            .step-indicator-enhanced {
+                min-width: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header - VERSÃO MAIS DISCRETA -->
+        <div class="header glass compact-header">
+            <div class="header-content">
+                <img src="{{ logo_data_url }}" alt="USB MKT AM" class="header-logo-large">
+                <div class="header-info">
+                    <h1><i class="fas fa-rocket"></i> ARQV30 Enhanced</h1>
+                    <p class="header-subtitle">Sistema de Análise com IA e Verificação Inteligente</p>
+                </div>
+                <div class="stats-compact">
+                    <span class="stat-compact"><i class="fas fa-layer-group"></i> 4 Etapas</span>
+                    <span class="stat-compact"><i class="fas fa-modules"></i> 26 Módulos</span>
+                    <span class="stat-compact"><i class="fas fa-check-circle"></i> 100% Real</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuração -->
+        <div class="config-section glass">
+            <h3><i class="fas fa-cog"></i> Configuração da Análise</h3>
+            <form id="analysisForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="segmento">
+                                <i class="fas fa-bullseye"></i> Segmento de Mercado *
+                            </label>
+                            <input type="text" id="segmento" name="segmento" class="form-control" 
+                                   placeholder="Ex: Tecnologia, Saúde, E-commerce..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="produto">
+                                <i class="fas fa-box"></i> Produto/Serviço
+                            </label>
+                            <input type="text" id="produto" name="produto" class="form-control"
+                                   placeholder="Nome do seu produto ou serviço">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="preco">
+                                <i class="fas fa-dollar-sign"></i> Preço (R$)
+                            </label>
+                            <input type="number" id="preco" name="preco" class="form-control" 
+                                   step="0.01" placeholder="997.00">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="objetivo_receita">
+                                <i class="fas fa-chart-line"></i> Objetivo de Receita (R$)
+                            </label>
+                            <input type="number" id="objetivo_receita" name="objetivo_receita" 
+                                   class="form-control" step="0.01" placeholder="100000.00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="publico">
+                        <i class="fas fa-users"></i> Público-Alvo Detalhado
+                    </label>
+                    <textarea id="publico" name="publico" class="form-control" rows="4"
+                              placeholder="Descreva detalhadamente seu público-alvo: dores, desejos, características demográficas..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="contexto_adicional">
+                        <i class="fas fa-plus-circle"></i> Contexto Adicional
+                    </label>
+                    <textarea id="contexto_adicional" name="contexto_adicional" class="form-control" rows="3"
+                              placeholder="Informações adicionais relevantes para a análise..."></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="openrouter_model">
+                                <i class="fas fa-robot"></i> Modelo OpenRouter
+                            </label>
+                            <input type="text" id="openrouter_model" name="openrouter_model" class="form-control"
+                                   placeholder="Digite o modelo desejado (ex: anthropic/claude-3-haiku:beta)">
+                            <small class="text-muted">Modelo IA que processará a análise</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="session_name">
+                                <i class="fas fa-save"></i> Nome da Sessão
+                            </label>
+                            <input type="text" id="session_name" name="session_name" class="form-control"
+                                   placeholder="Nome para salvar esta análise">
+                            <small class="text-muted">Deixe em branco para gerar automaticamente</small>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Gerenciamento de Sessões -->
+        <div class="config-section">
+            <h3><i class="fas fa-history"></i> Gerenciar Sessões e Modelos</h3>
+            
+            <!-- Primeira linha: Botões principais lado a lado -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <button class="btn btn-success btn-block" onclick="saveSession()">
+                        <i class="fas fa-save"></i> Salvar Sessão
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-info btn-block" onclick="showSavedSessions()">
+                        <i class="fas fa-list"></i> Sessões Salvas
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary btn-block" onclick="toggleModelsSection()">
+                        <i class="fas fa-robot"></i> Gerenciar Modelos
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Segunda linha: Botão de pausar centralizado -->
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <button class="btn btn-warning btn-block" onclick="pauseCurrentSession()" id="pauseBtn" disabled>
+                        <i class="fas fa-pause"></i> Pausar Análise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lista de Sessões Salvas -->
+            <div id="savedSessions" class="sessions-container glass" style="margin-top: 20px;">
+                <!-- Sessões serão carregadas dinamicamente -->
+            </div>
+        </div>
+
+        <!-- ✅ NOVO: Gerenciamento de Modelos -->
+        <div class="models-section" id="modelsSection" style="display: none;">
+            <div class="models-header">
+                <div class="models-title">
+                    <i class="fas fa-robot"></i>
+                    <span>Gerenciamento de Modelos IA</span>
+                </div>
+                <button class="btn btn-secondary" onclick="toggleModelsSection()">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+            </div>
+
+            <!-- Abas de Navegação -->
+            <div class="models-tabs">
+                <button class="models-tab active" onclick="switchModelsTab('download')" id="downloadTab">
+                    <i class="fas fa-download"></i> Baixar Modelos
+                </button>
+                <button class="models-tab" onclick="switchModelsTab('installed')" id="installedTab">
+                    <i class="fas fa-hard-drive"></i> Modelos Instalados
+                </button>
+                <button class="models-tab" onclick="switchModelsTab('recommendation')" id="recommendationTab">
+                    <i class="fas fa-lightbulb"></i> Recomendações
+                </button>
+                <button class="models-tab" onclick="switchModelsTab('optimize')" id="optimizeTab">
+                    <i class="fas fa-cogs"></i> Otimizar
+                </button>
+            </div>
+
+            <!-- Conteúdo: Baixar Modelos -->
+            <div class="models-content active" id="downloadContent">
+                <div class="models-stats" id="downloadStats">
+                    <div class="models-stat">
+                        <div class="models-stat-value" id="availableCount">8</div>
+                        <div class="models-stat-label">Modelos Disponíveis</div>
+                    </div>
+                    <div class="models-stat">
+                        <div class="models-stat-value" id="systemRam">--</div>
+                        <div class="models-stat-label">RAM do Sistema</div>
+                    </div>
+                    <div class="models-stat">
+                        <div class="models-stat-value" id="recommendedModel">--</div>
+                        <div class="models-stat-label">Modelo Recomendado</div>
+                    </div>
+                </div>
+
+                <div id="availableModels">
+                    <!-- Modelos disponíveis serão carregados aqui -->
+                </div>
+            </div>
+
+            <!-- Conteúdo: Modelos Instalados -->
+            <div class="models-content" id="installedContent">
+                <div class="models-stats" id="installedStats">
+                    <div class="models-stat">
+                        <div class="models-stat-value" id="installedCount">--</div>
+                        <div class="models-stat-label">Modelos Instalados</div>
+                    </div>
+                    <div class="models-stat">
+                        <div class="models-stat-value" id="totalSize">--</div>
+                        <div class="models-stat-label">Espaço Usado</div>
+                    </div>
+                    <div class="models-stat">
+                        <div class="models-stat-value" id="activeModel">--</div>
+                        <div class="models-stat-label">Modelo Ativo</div>
+                    </div>
+                </div>
+
+                <div id="installedModels">
+                    <!-- Modelos instalados serão carregados aqui -->
+                </div>
+            </div>
+
+            <!-- Conteúdo: Recomendações -->
+            <div class="models-content" id="recommendationContent">
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <i class="fas fa-magic"></i>
+                        <span>Recomendação Personalizada</span>
+                    </div>
+                    
+                    <div class="recommendation-filters">
+                        <div class="filter-group">
+                            <label class="filter-label">Memória RAM Disponível:</label>
+                            <select class="filter-select" id="ramFilter" onchange="updateRecommendations()">
+                                <option value="low">2-4GB (Sistema Limitado)</option>
+                                <option value="medium" selected>4-8GB (Sistema Médio)</option>
+                                <option value="high">8GB+ (Sistema Potente)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Prioridade:</label>
+                            <select class="filter-select" id="priorityFilter" onchange="updateRecommendations()">
+                                <option value="speed">Velocidade Máxima</option>
+                                <option value="balanced" selected>Equilibrado</option>
+                                <option value="quality">Qualidade Máxima</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Caso de Uso:</label>
+                            <select class="filter-select" id="useCaseFilter" onchange="updateRecommendations()">
+                                <option value="general" selected>Análise Geral</option>
+                                <option value="complex">Análises Complexas</option>
+                                <option value="code">Código/Técnico</option>
+                                <option value="portuguese">Português Nativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="recommendedModels">
+                        <!-- Recomendações serão carregadas aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo: Otimizar -->
+            <div class="models-content" id="optimizeContent">
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Otimização Automática</span>
+                    </div>
+                    
+                    <div id="optimizationResults">
+                        <p style="color: #6c757d; text-align: center; padding: 40px;">
+                            <i class="fas fa-info-circle"></i><br>
+                            Clique em "Analisar Sistema" para obter configurações otimizadas
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="model-btn" onclick="analyzeSystem()">
+                            <i class="fas fa-search"></i> Analisar Sistema
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Steps - REORGANIZADO: Verificação AI ANTES da Síntese -->
+        <div class="workflow-container">
+            <!-- Etapa 1: Coleta -->
+            <div class="step-card glass" id="step1Card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Coleta Massiva Real</h3>
+                <p class="step-description">
+                    Busca massiva com rotação de APIs, extração de conteúdo viral e captura automática de screenshots
+                </p>
+                <div class="step-features">
+                    <span class="feature-tag">🔄 Rotação de APIs</span>
+                    <span class="feature-tag">📸 Screenshots Automáticos</span>
+                    <span class="feature-tag">🔥 Conteúdo Viral</span>
+                    <span class="feature-tag">🌐 Múltiplos Provedores</span>
+                </div>
+                <button class="step-btn" id="step1Btn" onclick="startStep1()">
+                    <i class="fas fa-database"></i>
+                    <span>Iniciar Coleta Massiva</span>
+                </button>
+            </div>
+
+            <!-- Etapa 2: Verificação AI (ANTES da Síntese) -->
+            <div class="step-card glass" id="aiVerificationCard">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Verificação AI</h3>
+                <p class="step-description">
+                    Verificação inteligente dos dados coletados usando múltiplas camadas de IA para filtrar qualidade
+                </p>
+                <div class="step-features">
+                    <span class="feature-tag">🧠 Análise de Sentimento</span>
+                    <span class="feature-tag">🔍 Detecção de Viés</span>
+                    <span class="feature-tag">✅ Validação LLM</span>
+                    <span class="feature-tag">🚫 Filtro de Qualidade</span>
+                </div>
+                <button class="step-btn" id="aiVerificationBtn" onclick="startAIVerification()">
+                    <i class="fas fa-robot"></i>
+                    <span>Verificar com IA</span>
+                </button>
+            </div>
+
+            <!-- Etapa 3: Síntese com IA (DEPOIS da Verificação) -->
+            <div class="step-card glass" id="step2Card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Síntese com IA Ativa</h3>
+                <p class="step-description">
+                    IA analisa dados verificados e realiza buscas online ativas para validar e enriquecer informações
+                </p>
+                <div class="step-features">
+                    <span class="feature-tag">🤖 IA com Ferramentas</span>
+                    <span class="feature-tag">🔍 Busca Ativa</span>
+                    <span class="feature-tag">✅ Validação Online</span>
+                    <span class="feature-tag">📊 Síntese JSON</span>
+                </div>
+                <button class="step-btn" id="step2Btn" onclick="startStep2()">
+                    <i class="fas fa-brain"></i>
+                    <span>Iniciar Síntese IA</span>
+                </button>
+            </div>
+
+            <!-- Etapa 4: Geração de Módulos -->
+            <div class="step-card glass" id="step3Card">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Geração de 26 Módulos</h3>
+                <p class="step-description">
+                    Geração automática de 16 módulos especializados e compilação do relatório final completo
+                </p>
+                <div class="step-features">
+                    <span class="feature-tag">📝 26 Módulos</span>
+                    <span class="feature-tag">🔗 Compilação</span>
+                    <span class="feature-tag">📋 Relatório Final</span>
+                    <span class="feature-tag">📄 25+ Páginas</span>
+                </div>
+                <button class="step-btn" id="step3Btn" onclick="startStep3()">
+                    <i class="fas fa-cogs"></i>
+                    <span>Gerar Módulos</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ✅ MELHORADO: Progress Section com Monitoramento de Qualidade -->
+        <div class="progress-section glass" id="progressSection">
+            <div class="progress-header">
+                <div class="progress-title">
+                    <i class="fas fa-cogs fa-spin"></i>
+                    <span id="progressTitle">Workflow em Execução</span>
+                </div>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-bar-glow" id="progressBarGlow"></div>
+            </div>
+
+            <div class="progress-status" id="progressStatus">
+                Iniciando workflow...
+            </div>
+
+            <!-- ✅ NOVO: Métricas de Qualidade em Tempo Real -->
+            <div class="quality-metrics" id="qualityMetrics" style="display: none;">
+                <div class="quality-header">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Métricas de Qualidade</span>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="successRate">--</div>
+                        <div class="metric-label">Taxa de Sucesso</div>
+                        <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="qualityScore">--</div>
+                        <div class="metric-label">Score de Qualidade</div>
+                        <div class="metric-icon"><i class="fas fa-star"></i></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="processingTime">--</div>
+                        <div class="metric-label">Tempo de Processamento</div>
+                        <div class="metric-icon"><i class="fas fa-clock"></i></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="dataPoints">--</div>
+                        <div class="metric-label">Pontos de Dados</div>
+                        <div class="metric-icon"><i class="fas fa-database"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ✅ MELHORADO: Indicadores de Etapa com Status Detalhado -->
+            <div class="step-indicators">
+                <div class="step-indicator-enhanced" id="indicator1">
+                    <div class="step-number">1</div>
+                    <div class="step-status" id="status1">Coleta</div>
+                    <div class="step-progress" id="progress1"></div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-indicator-enhanced" id="indicatorAI">
+                    <div class="step-number">2</div>
+                    <div class="step-status" id="statusAI">Verificação AI</div>
+                    <div class="step-progress" id="progressAI"></div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-indicator-enhanced" id="indicator2">
+                    <div class="step-number">3</div>
+                    <div class="step-status" id="status2">Síntese IA</div>
+                    <div class="step-progress" id="progress2"></div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-indicator-enhanced" id="indicator3">
+                    <div class="step-number">4</div>
+                    <div class="step-status" id="status3">Módulos</div>
+                    <div class="step-progress" id="progress3"></div>
+                </div>
+            </div>
+
+            <!-- ✅ NOVO: Log de Atividades em Tempo Real -->
+            <div class="activity-log" id="activityLog" style="display: none;">
+                <div class="log-header">
+                    <i class="fas fa-list-ul"></i>
+                    <span>Log de Atividades</span>
+                    <button class="btn-toggle-log" onclick="toggleActivityLog()">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="log-content" id="logContent">
+                    <div class="log-entry">
+                        <span class="log-time">--:--:--</span>
+                        <span class="log-message">Sistema inicializado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section - MELHORADO: Seguindo padrão visual -->
+        <div class="results-section glass" id="resultsSection">
+            <div class="results-header">
+                <h3><i class="fas fa-chart-bar"></i> Resultados da Análise</h3>
+                <div class="results-actions">
+                    <button class="btn-action" onclick="exportResults()">
+                        <i class="fas fa-download"></i> Exportar HTML
+                    </button>
+                    <button class="btn-action" onclick="generatePDF()" id="pdfBtn" style="display: none;">
+                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                    </button>
+                    <button class="btn-action" onclick="shareResults()">
+                        <i class="fas fa-share"></i> Compartilhar
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-tabs">
+                <button class="tab-btn magnetic-btn active" onclick="switchTab('overview')">
+                    <i class="fas fa-eye"></i> Visão Geral
+                </button>
+                <button class="tab-btn magnetic-btn" onclick="switchTab('modules')">
+                    <i class="fas fa-th-large"></i> 26 Módulos
+                </button>
+                <button class="tab-btn magnetic-btn" onclick="switchTab('screenshots')">
+                    <i class="fas fa-camera"></i> Screenshots
+                </button>
+                <button class="tab-btn magnetic-btn" onclick="switchTab('data')">
+                    <i class="fas fa-database"></i> Dados Coletados
+                </button>
+            </div>
+
+            <div class="tab-content active" id="overviewTab">
+                <div id="overviewContent">
+                    <!-- Conteúdo da visão geral -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="modulesTab">
+                <div id="modulesContent">
+                    <!-- Lista dos 16 módulos -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="screenshotsTab">
+                <div id="screenshotsContent">
+                    <!-- Screenshots capturados -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="dataTab">
+                <div id="dataContent">
+                    <!-- Dados brutos coletados -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+
+            <button class="btn btn-secondary" onclick="resetWorkflow()">
+                <i class="fas fa-refresh"></i>
+                <span>Resetar</span>
+            </button>
+
+            <button class="btn btn-secondary" onclick="downloadResults()" id="downloadBtn" style="display: none;">
+                <i class="fas fa-download"></i>
+                <span>Download Relatório</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Modal for Session Management -->
+    <div id="sessionModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">Modal</h3>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <!-- Conteúdo dinâmico -->
+            </div>
+            <div id="modalFooter" class="modal-footer">
+                <!-- Botões dinâmicos -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Estados globais
+        let currentSessionId = null;
+        let workflowRunning = false;
+        let progressInterval = null;
+
+        // ===== GERENCIAMENTO DE SESSÕES =====
+        async function saveSession() {
+            const sessionName = document.getElementById('session_name').value || 
+                `Análise ${new Date().toLocaleString('pt-BR')}`;
+
+            const segmento = document.getElementById('segmento').value;
+
+            if (!segmento.trim()) {
+                showNotification('Por favor, preencha o segmento de mercado', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/sessions/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId, // Envia o ID da sessão atual se existir
+                        name: sessionName,
+                        segmento: segmento,
+                        produto: document.getElementById('produto').value,
+                        preco: document.getElementById('preco').value,
+                        objetivo_receita: document.getElementById('objetivo_receita').value,
+                        publico: document.getElementById('publico').value,
+                        contexto_adicional: document.getElementById('contexto_adicional').value,
+                        openrouter_model: document.getElementById('openrouter_model').value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentSessionId = result.session_id;
+                    showNotification('Sessão "' + sessionName + '" salva com sucesso!', 'success');
+                    loadSavedSessions();
+                } else {
+                    showNotification('Erro ao salvar sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar sessão:', error);
+                showNotification('Erro ao salvar sessão. Verifique sua conexão.', 'error');
+            }
+        }
+
+        async function loadSavedSessions() {
+            try {
+                const response = await fetch('/api/sessions');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Resposta não é JSON válido');
+                }
+                
+                const result = await response.json();
+                const sessions = result.sessions || result;
+
+                const container = document.getElementById('savedSessions');
+
+                if (!Array.isArray(sessions) || sessions.length === 0) {
+                    container.innerHTML = '<div class="empty-sessions"><i class="fas fa-inbox"></i><p>Nenhuma sessão salva ainda</p></div>';
+                    return;
+                }
+
+                container.innerHTML = sessions.map(session => 
+                    '<div class="session-item" data-session-id="' + session.id + '">' +
+                        '<div class="session-header">' +
+                            '<span class="session-name">' + session.name + '</span>' +
+                            '<span class="session-status ' + session.status + '">' + getStatusText(session.status) + '</span>' +
+                        '</div>' +
+                        '<div class="session-details">' +
+                            '<div><strong>Segmento:</strong> ' + (session.segmento || 'N/A') + '</div>' +
+                            '<div><strong>Query:</strong> ' + (session.query || 'N/A') + '</div>' +
+                            '<div><strong>Modelo:</strong> ' + (session.openrouter_model || 'N/A') + '</div>' +
+                            '<div><strong>Criado:</strong> ' + new Date(session.created_at).toLocaleString('pt-BR') + '</div>' +
+                        '</div>' +
+                        '<div class="session-progress">' +
+                            '<div class="session-progress-bar" style="width: ' + (session.progress_percentage || 0) + '%"></div>' +
+                        '</div>' +
+                        '<div class="session-actions">' +
+                            (session.status === 'paused' ? 
+                                '<button class="session-btn continue" onclick="continueSession(\'' + session.id + '\')">' +
+                                    '<i class="fas fa-play"></i> Continuar' +
+                                '</button>' : '') +
+                            (session.status === 'active' ? 
+                                '<button class="session-btn pause" onclick="pauseSession(\'' + session.id + '\')">' +
+                                    '<i class="fas fa-pause"></i> Pausar' +
+                                '</button>' : '') +
+                            '<button class="session-btn rename" onclick="showRenameModal(\'' + session.id + '\', \'' + escapeHtml(session.name) + '\')">' +
+                                '<i class="fas fa-edit"></i> Renomear' +
+                            '</button>' +
+                            '<button class="session-btn model" onclick="showModelModal(\'' + session.id + '\', \'' + escapeHtml(session.openrouter_model) + '\')">' +
+                                '<i class="fas fa-robot"></i> Modelo' +
+                            '</button>' +
+                            '<button class="session-btn delete" onclick="deleteSession(\'' + session.id + '\')">' +
+                                '<i class="fas fa-trash"></i> Excluir' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>'
+                ).join('');
+            } catch (error) {
+                console.error('Erro ao carregar sessões:', error);
+                document.getElementById('savedSessions').innerHTML = 
+                    '<div class="alert alert-error">' +
+                        '<i class="fas fa-exclamation-circle"></i>' +
+                        'Erro ao carregar sessões: ' + error.message +
+                    '</div>';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch(status) {
+                case 'active': return 'Ativa';
+                case 'paused': return 'Pausada';
+                case 'completed': return 'Concluída';
+                default: return status;
+            }
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // Função para mostrar sessões salvas
+        function showSavedSessions() {
+            const container = document.getElementById('savedSessions');
+            if (container.style.display === 'none' || !container.style.display) {
+                container.style.display = 'block';
+                loadSavedSessions();
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        // Continua sessão pausada
+        async function continueSession(sessionId) {
+            try {
+                const response = await fetch('/api/sessions/' + sessionId + '/continue', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Sessão continuada com sucesso!', 'success');
+                    currentSessionId = sessionId;
+                    
+                    // Preenche formulário com dados da sessão
+                    const sessionData = result.session_data;
+                    document.getElementById('segmento').value = sessionData.segmento || '';
+                    document.getElementById('produto').value = sessionData.produto || '';
+                    document.getElementById('preco').value = sessionData.preco || '';
+                    document.getElementById('objetivo_receita').value = sessionData.objetivo_receita || '';
+                    document.getElementById('publico').value = sessionData.publico || '';
+                    document.getElementById('contexto_adicional').value = sessionData.contexto_adicional || '';
+                    document.getElementById('openrouter_model').value = sessionData.openrouter_model || '';
+                    document.getElementById('session_name').value = sessionData.name || '';
+
+                    // Atualiza lista de sessões
+                    loadSavedSessions();
+                    
+                    // Garante que os botões estejam habilitados
+                    ensureButtonsEnabled();
+                } else {
+                    showNotification('Erro ao continuar sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao continuar sessão:', error);
+                showNotification('Erro ao continuar sessão', 'error');
+            }
+        }
+
+        // Pausa sessão específica
+        async function pauseSession(sessionId) {
+            try {
+                const response = await fetch('/api/sessions/' + sessionId + '/pause', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Sessão pausada com sucesso!', 'success');
+                    loadSavedSessions(); // Atualiza a lista
+                } else {
+                    showNotification('Erro ao pausar sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao pausar sessão:', error);
+                showNotification('Erro ao pausar sessão', 'error');
+            }
+        }
+
+        // Mostra modal para renomear
+        function showRenameModal(sessionId, currentName) {
+            const modal = document.getElementById('sessionModal');
+            document.getElementById('modalTitle').textContent = 'Renomear Sessão';
+            document.getElementById('modalBody').innerHTML = 
+                '<div class="form-group">' +
+                    '<label for="newSessionName">Novo nome:</label>' +
+                    '<input type="text" id="newSessionName" class="form-control" value="' + currentName + '">' +
+                '</div>';
+            document.getElementById('modalFooter').innerHTML = 
+                '<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>' +
+                '<button class="btn btn-primary" onclick="renameSession(\'' + sessionId + '\')">Renomear</button>';
+            
+            modal.style.display = 'flex';
+        }
+
+        // Mostra modal para alterar modelo
+        function showModelModal(sessionId, currentModel) {
+            const modal = document.getElementById('sessionModal');
+            document.getElementById('modalTitle').textContent = 'Alterar Modelo OpenRouter';
+            document.getElementById('modalBody').innerHTML = 
+                '<div class="form-group">' +
+                    '<label for="newModel">Modelo:</label>' +
+                    '<input type="text" id="newModel" class="form-control" value="' + currentModel + '" placeholder="Digite o modelo desejado (ex: anthropic/claude-3-haiku:beta)">' +
+                    '<small class="text-muted">O modelo será usado nas próximas execuções desta sessão</small>' +
+                '</div>';
+            document.getElementById('modalFooter').innerHTML = 
+                '<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>' +
+                '<button class="btn btn-primary" onclick="updateSessionModel(\'' + sessionId + '\')">Atualizar</button>';
+            
+            modal.style.display = 'flex';
+        }
+
+        // Renomeia sessão
+        async function renameSession(sessionId) {
+            const newName = document.getElementById('newSessionName').value.trim();
+            if (!newName) {
+                showNotification('Nome não pode estar vazio', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/sessions/' + sessionId + '/rename', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: newName })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Sessão renomeada com sucesso!', 'success');
+                    closeModal();
+                    loadSavedSessions(); // Atualiza a lista
+                } else {
+                    showNotification('Erro ao renomear sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao renomear sessão:', error);
+                showNotification('Erro ao renomear sessão', 'error');
+            }
+        }
+
+        // Atualiza modelo da sessão
+        async function updateSessionModel(sessionId) {
+            const newModel = document.getElementById('newModel').value;
+
+            try {
+                const response = await fetch('/api/sessions/' + sessionId + '/model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: newModel })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Modelo atualizado com sucesso!', 'success');
+                    closeModal();
+                    loadSavedSessions(); // Atualiza a lista
+                } else {
+                    showNotification('Erro ao atualizar modelo: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar modelo:', error);
+                showNotification('Erro ao atualizar modelo', 'error');
+            }
+        }
+
+        // Remove sessão
+        async function deleteSession(sessionId) {
+            if (!confirm('Tem certeza que deseja excluir esta sessão?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/sessions/' + sessionId + '/delete', {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Sessão excluída com sucesso!', 'success');
+                    loadSavedSessions(); // Atualiza a lista
+                } else {
+                    showNotification('Erro ao excluir sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir sessão:', error);
+                showNotification('Erro ao excluir sessão', 'error');
+            }
+        }
+
+        // Fecha modal
+        function closeModal() {
+            document.getElementById('sessionModal').style.display = 'none';
+        }
+
+        // Gera ID único para sessão
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // Pega dados do formulário
+        function getFormData() {
+            return {
+                segmento: document.getElementById('segmento').value,
+                produto: document.getElementById('produto').value,
+                preco: document.getElementById('preco').value,
+                objetivo_receita: document.getElementById('objetivo_receita').value,
+                publico: document.getElementById('publico').value,
+                contexto_adicional: document.getElementById('contexto_adicional').value
+            };
+        }
+
+        // Inicializa funcionalidades de sessão quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedSessions();
+            setupEventListeners();
+            ensureButtonsEnabled();
+        });
+
+        function ensureButtonsEnabled() {
+            // Garante que todos os botões das etapas estejam sempre habilitados
+            document.getElementById('step1Btn').disabled = false;
+            document.getElementById('step2Btn').disabled = false;
+            document.getElementById('step3Btn').disabled = false;
+            console.log('✅ Todos os botões das etapas habilitados');
+        }
+
+        function setupEventListeners() {
+            // Auto-save configuração
+            const form = document.getElementById('analysisForm');
+            if (form) {
+                form.addEventListener('change', saveConfiguration);
+            }
+
+            // Atalhos de teclado
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Enter para iniciar workflow completo
+                if (e.ctrlKey && e.key === 'Enter' && !workflowRunning) {
+                    e.preventDefault();
+                    startCompleteWorkflow();
+                }
+            });
+        }
+
+        function saveConfiguration() {
+            const config = getFormData();
+            localStorage.setItem('arqv30_config_v3', JSON.stringify(config));
+        }
+
+        function loadSavedConfiguration() {
+            const saved = localStorage.getItem('arqv30_config_v3');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    Object.entries(config).forEach(([key, value]) => {
+                        const element = document.getElementById(key);
+                        if (element && value) {
+                            element.value = value;
+                        }
+                    });
+                } catch (error) {
+                    console.error('Erro ao carregar configuração:', error);
+                }
+            }
+        }
+
+        // ===== WORKFLOW STEPS =====
+        async function startStep1() {
+            const segmento = document.getElementById('segmento').value;
+            const produto = document.getElementById('produto').value;
+            const publico = document.getElementById('publico').value;
+
+            if (!segmento.trim()) {
+                showNotification('Por favor, preencha pelo menos o segmento de mercado', 'warning');
+                return;
+            }
+
+            // Gera currentSessionId se não existir
+            if (!currentSessionId) {
+                currentSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`;
+                console.log('🆕 Novo currentSessionId gerado:', currentSessionId);
+                
+                // Salva automaticamente a sessão quando inicia análise
+                try {
+                    await saveSession();
+                    console.log('💾 Sessão salva automaticamente ao iniciar análise');
+                } catch (error) {
+                    console.warn('⚠️ Erro ao salvar sessão automaticamente:', error);
+                }
+            }
+
+            try {
+                setStepLoading(1, true);
+                showProgressSection();
+
+                const response = await fetch('/api/workflow/step1/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        segmento: segmento,
+                        produto: produto,
+                        publico: publico
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentSessionId = result.session_id;
+                    showNotification('Etapa 1 iniciada com sucesso! Session: ' + currentSessionId, 'success');
+                    startProgressMonitoring();
+                    updateStepStatus(1, 'running');
+                    workflowRunning = true;
+                } else {
+                    showNotification('Erro na Etapa 1: ' + result.error, 'error');
+                    setStepLoading(1, false);
+                }
+            } catch (error) {
+                console.error('Erro na Etapa 1:', error);
+                showNotification('Erro ao iniciar Etapa 1', 'error');
+                setStepLoading(1, false);
+            }
+        }
+
+        async function startStep2() {
+            if (!currentSessionId) {
+                showNotification('Execute a Etapa 1 primeiro', 'warning');
+                return;
+            }
+
+            try {
+                setStepLoading(2, true);
+                showNotification('Etapa 3 iniciada: Síntese com IA...', 'info');
+                updateStepStatus(2, 'running');
+
+                const response = await fetch('/api/workflow/step3/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: currentSessionId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Etapa 2 em andamento!', 'success');
+                    // O monitoramento cuidará da conclusão e habilitação da próxima etapa
+                } else {
+                    showNotification('Erro na Etapa 2: ' + result.error, 'error');
+                    setStepLoading(2, false);
+                    updateStepStatus(2, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na Etapa 2:', error);
+                showNotification('Erro ao iniciar Etapa 2', 'error');
+                setStepLoading(2, false);
+                updateStepStatus(2, 'error');
+            }
+        }
+
+        async function startAIVerification() {
+            if (!currentSessionId) {
+                showNotification('Execute a Etapa 1 primeiro', 'warning');
+                return;
+            }
+
+            try {
+                setStepLoading('aiVerification', true);
+                showNotification('Etapa 2 iniciada: Verificação AI...', 'info');
+                updateStepStatus('aiVerification', 'running');
+
+                const response = await fetch('/api/workflow/step2/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: currentSessionId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Verificação AI em andamento!', 'success');
+                    // O monitoramento cuidará da conclusão
+                } else {
+                    showNotification('Erro na Verificação AI: ' + result.error, 'error');
+                    setStepLoading('aiVerification', false);
+                    updateStepStatus('aiVerification', 'error');
+                }
+            } catch (error) {
+                console.error('Erro na Verificação AI:', error);
+                showNotification('Erro ao iniciar Verificação AI', 'error');
+                setStepLoading('aiVerification', false);
+                updateStepStatus('aiVerification', 'error');
+            }
+        }
+
+        async function startStep3() {
+            if (!currentSessionId) {
+                showNotification('Execute as etapas anteriores primeiro', 'warning');
+                return;
+            }
+
+            try {
+                setStepLoading(3, true);
+                showNotification('Etapa 3 iniciada: Gerando módulos...', 'info');
+                updateStepStatus(3, 'running');
+
+                const response = await fetch('/api/workflow/step4/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: currentSessionId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Etapa 3 em andamento!', 'success');
+                    // O monitoramento cuidará da conclusão
+                } else {
+                    showNotification('Erro na Etapa 3: ' + result.error, 'error');
+                    setStepLoading(3, false);
+                    updateStepStatus(3, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na Etapa 3:', error);
+                showNotification('Erro ao iniciar Etapa 3', 'error');
+                setStepLoading(3, false);
+                updateStepStatus(3, 'error');
+            }
+        }
+
+        function startCompleteWorkflow() {
+            if (workflowRunning) {
+                showNotification('O workflow já está em execução.', 'warning');
+                return;
+            }
+            // Simula o clique nos botões na ordem correta, se eles estiverem habilitados
+            if (document.getElementById('step1Btn').disabled === false) {
+                startStep1();
+            } else {
+                showNotification('Etapa 1 ainda não está pronta.', 'warning');
+            }
+        }
+
+        function setStepLoading(stepNumber, isLoading) {
+            let buttonId = stepNumber === 'aiVerification' ? 'aiVerificationBtn' : 'step' + stepNumber + 'Btn';
+            const button = document.getElementById(buttonId);
+            const spinner = document.createElement('div');
+            spinner.className = 'loading-spinner';
+            spinner.style.display = isLoading ? 'inline-block' : 'none';
+
+            if (button) {
+                const existingSpinner = button.querySelector('.loading-spinner');
+                if (existingSpinner) {
+                    existingSpinner.remove();
+                }
+                if (isLoading) {
+                    button.insertBefore(spinner, button.firstChild);
+                }
+                button.disabled = isLoading;
+            }
+        }
+        
+        function updateStepStatus(stepNumber, status) {
+            let cardId = stepNumber === 'aiVerification' ? 'aiVerificationCard' : 'step' + stepNumber + 'Card';
+            let buttonId = stepNumber === 'aiVerification' ? 'aiVerificationBtn' : 'step' + stepNumber + 'Btn';
+            
+            const card = document.getElementById(cardId);
+            if (card) {
+                card.className = 'step-card ' + status; // Limpa classes e adiciona a nova
+            }
+            
+            const button = document.getElementById(buttonId);
+            if (button) {
+                if (status === 'completed') {
+                    button.disabled = false; // Mantém habilitado mesmo após conclusão
+                    const spinner = button.querySelector('.loading-spinner');
+                    if(spinner) spinner.style.display = 'none';
+                } else if (status === 'running') {
+                     // Já tratado em setStepLoading
+                } else if (status === 'error') {
+                    button.disabled = false; // Mantém habilitado mesmo com erro
+                    const spinner = button.querySelector('.loading-spinner');
+                    if(spinner) spinner.style.display = 'none';
+                }
+            }
+            updateStepIndicator(stepNumber, status);
+        }
+        
+        function updateStepIndicator(stepNumber, status) {
+            let indicatorId = stepNumber === 'aiVerification' ? 'indicatorAI' : 'indicator' + stepNumber;
+            const indicator = document.getElementById(indicatorId);
+            if (indicator) {
+                indicator.className = 'step-indicator'; // Reseta
+                if (status === 'completed') {
+                    indicator.classList.add('completed');
+                } else if (status === 'running' || status === 'active') {
+                    indicator.classList.add('active');
+                }
+            }
+        }
+
+        function showProgressSection() {
+            document.getElementById('progressSection').style.display = 'block';
+        }
+        
+        function hideProgressSection() {
+             document.getElementById('progressSection').style.display = 'none';
+        }
+
+        function updateProgressDisplay(status) {
+            const progressTitle = document.getElementById('progressTitle');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const progressBar = document.getElementById('progressBar');
+            const progressStatus = document.getElementById('progressStatus');
+            
+            let currentStep = status.current_step || 0;
+            let percentage = status.progress_percentage || 0;
+            let message = status.message || 'Processando...';
+
+            // Atualiza baseado no status mais recente
+            if (status.step_status?.step1 === 'completed') {
+                currentStep = Math.max(currentStep, 1);
+                percentage = Math.max(percentage, 33);
+                message = status.message || 'Etapa 1 concluída';
+            }
+            if (status.step_status?.step2 === 'completed') {
+                currentStep = Math.max(currentStep, 2);
+                percentage = Math.max(percentage, 66);
+                message = status.message || 'Etapa 2 concluída';
+            }
+            if (status.step_status?.step3 === 'completed') {
+                currentStep = Math.max(currentStep, 3);
+                percentage = Math.max(percentage, 100);
+                message = status.message || 'Etapa 3 concluída';
+            }
+            
+            // Animação suave da barra de progresso com precisão melhorada
+            const progressBarElement = document.getElementById('progressBar');
+            if (progressBarElement) {
+                progressBarElement.style.width = percentage + '%';
+            }
+            
+            // Atualização dos elementos com formatação melhorada
+            const icon = percentage === 100 ? 'fa-check-circle' : (percentage > 0 ? 'fa-cogs fa-spin' : 'fa-cogs');
+            progressTitle.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            progressPercentage.textContent = Math.round(percentage * 10) / 10 + '%';
+            progressStatus.textContent = message;
+
+            // ✅ NOVO: Integração com sistema de monitoramento de qualidade
+            if (status.quality_metrics) {
+                updateQualityMetrics(status.quality_metrics);
+                showQualityMetrics();
+            }
+
+            // ✅ NOVO: Atualiza indicadores de etapa aprimorados
+            updateStepIndicatorsEnhanced(status);
+
+            // ✅ NOVO: Adiciona entrada no log de atividades
+            if (status.activity_log) {
+                addActivityLogEntry(status.activity_log);
+            }
+
+            // ✅ NOVO: Efeito glow na barra de progresso
+            const progressBarGlow = document.getElementById('progressBarGlow');
+            if (progressBarGlow) {
+                progressBarGlow.style.width = percentage + '%';
+                progressBarGlow.style.opacity = percentage > 0 ? '0.5' : '0';
+            }
+
+            // ✅ NOVO: Mostra componentes quando há progresso
+            if (percentage > 0) {
+                showActivityLog();
+            }
+        }
+
+        // ✅ NOVO: Atualiza métricas de qualidade em tempo real
+        function updateQualityMetrics(metrics) {
+            const successRate = document.getElementById('successRate');
+            const qualityScore = document.getElementById('qualityScore');
+            const processingTime = document.getElementById('processingTime');
+            const dataPoints = document.getElementById('dataPoints');
+
+            if (successRate && metrics.success_rate !== undefined) {
+                successRate.textContent = (metrics.success_rate * 100).toFixed(1) + '%';
+                successRate.className = 'metric-value ' + getQualityClass(metrics.success_rate);
+            }
+
+            if (qualityScore && metrics.quality_score !== undefined) {
+                qualityScore.textContent = (metrics.quality_score * 100).toFixed(0);
+                qualityScore.className = 'metric-value ' + getQualityClass(metrics.quality_score);
+            }
+
+            if (processingTime && metrics.processing_time !== undefined) {
+                processingTime.textContent = formatTime(metrics.processing_time);
+            }
+
+            if (dataPoints && metrics.data_points !== undefined) {
+                dataPoints.textContent = metrics.data_points.toLocaleString();
+            }
+        }
+
+        // ✅ NOVO: Atualiza indicadores de etapa aprimorados
+        function updateStepIndicatorsEnhanced(status) {
+            const steps = ['1', '2', 'AI', '3'];
+            
+            steps.forEach(step => {
+                const indicator = document.getElementById(`indicator${step}`);
+                const statusElement = document.getElementById(`status${step}`);
+                
+                if (!indicator || !statusElement) return;
+
+                // Remove classes anteriores
+                indicator.classList.remove('active', 'completed', 'error');
+
+                // Determina status da etapa
+                let stepStatus = 'waiting';
+                let stepMessage = 'Aguardando';
+
+                if (status.step_status) {
+                    const stepKey = step === 'AI' ? 'ai_verification' : `step${step}`;
+                    const stepState = status.step_status[stepKey];
+
+                    if (stepState === 'running') {
+                        stepStatus = 'active';
+                        stepMessage = 'Em execução';
+                        indicator.classList.add('active');
+                    } else if (stepState === 'completed') {
+                        stepStatus = 'completed';
+                        stepMessage = 'Concluído';
+                        indicator.classList.add('completed');
+                    } else if (stepState === 'error') {
+                        stepStatus = 'error';
+                        stepMessage = 'Erro';
+                        indicator.classList.add('error');
+                    }
+                }
+
+                statusElement.textContent = stepMessage;
+            });
+        }
+
+        // ✅ NOVO: Adiciona entrada no log de atividades
+        function addActivityLogEntry(logEntry) {
+            const logContent = document.getElementById('logContent');
+            if (!logContent) return;
+
+            const entry = document.createElement('div');
+            entry.className = `log-entry new ${logEntry.type || ''}`;
+            
+            const time = new Date().toLocaleTimeString('pt-BR', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+
+            entry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="log-message">${logEntry.message}</span>
+            `;
+
+            // Adiciona no topo
+            logContent.insertBefore(entry, logContent.firstChild);
+
+            // Remove animação após 1 segundo
+            setTimeout(() => {
+                entry.classList.remove('new');
+            }, 1000);
+
+            // Limita a 50 entradas
+            const entries = logContent.querySelectorAll('.log-entry');
+            if (entries.length > 50) {
+                entries[entries.length - 1].remove();
+            }
+        }
+
+        // ✅ NOVO: Funções auxiliares
+        function getQualityClass(value) {
+            if (value >= 0.9) return 'excellent';
+            if (value >= 0.75) return 'good';
+            if (value >= 0.6) return 'acceptable';
+            if (value >= 0.4) return 'poor';
+            return 'critical';
+        }
+
+        function formatTime(seconds) {
+            if (seconds < 60) return seconds.toFixed(1) + 's';
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}m ${remainingSeconds.toFixed(0)}s`;
+        }
+
+        function showQualityMetrics() {
+            const qualityMetrics = document.getElementById('qualityMetrics');
+            if (qualityMetrics) {
+                qualityMetrics.style.display = 'block';
+            }
+        }
+
+        function showActivityLog() {
+            const activityLog = document.getElementById('activityLog');
+            if (activityLog) {
+                activityLog.style.display = 'block';
+            }
+        }
+
+        function toggleActivityLog() {
+            const logContent = document.getElementById('logContent');
+            const toggleBtn = document.querySelector('.btn-toggle-log i');
+            
+            if (logContent.style.display === 'none') {
+                logContent.style.display = 'block';
+                toggleBtn.className = 'fas fa-chevron-down';
+            } else {
+                logContent.style.display = 'none';
+                toggleBtn.className = 'fas fa-chevron-right';
+            }
+        }
+
+        function startProgressMonitoring() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+
+            progressInterval = setInterval(async () => {
+                if (!currentSessionId) return;
+
+                try {
+                    const response = await fetch('/api/workflow/status/' + currentSessionId);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        console.warn('Resposta não é JSON válido, tentando texto...');
+                        const text = await response.text();
+                        console.log('Resposta recebida:', text.substring(0, 200));
+                        return; // Pula esta iteração
+                    }
+                    
+                    const status = await response.json();
+                    updateProgressDisplay(status);
+
+                    // Habilita botões baseado no progresso
+                    if (status.step_status && status.step_status.step1 === 'completed') {
+                        updateStepStatus(1, 'completed');
+                        enableStepButton(2);
+                        console.log('✅ Etapa 1 concluída - habilitando Etapa 2');
+                    }
+
+                    if (status.step_status && status.step_status.step2 === 'completed') {
+                        updateStepStatus(2, 'completed');
+                        enableStepButton('aiVerification');
+                        console.log('✅ Etapa 2 concluída - habilitando Verificação AI');
+                    }
+
+                    if (status.ai_verification_completed) {
+                        updateStepStatus('aiVerification', 'completed');
+                        enableStepButton(3);
+                        console.log('✅ Verificação AI concluída - habilitando Etapa 3');
+                    }
+
+                    if (status.step_status && status.step_status.step3 === 'completed') {
+                        updateStepStatus(3, 'completed');
+                        console.log('✅ Etapa 3 concluída - workflow finalizado');
+                        clearInterval(progressInterval);
+                        showNotification('Workflow concluído com sucesso!', 'success');
+                        showResultsSection();
+                        workflowRunning = false;
+                    }
+                } catch (error) {
+                    console.error('Erro no monitoramento:', error);
+                }
+            }, 3000);
+        }
+
+        function enableStepButton(stepNumber) {
+            let buttonId = stepNumber === 'aiVerification' ? 'aiVerificationBtn' : '#step' + stepNumber + 'Btn';
+            const button = document.querySelector(buttonId.startsWith('#') ? buttonId : '#' + buttonId);
+            if (button) {
+                button.disabled = false;
+                button.classList.remove('disabled'); // Remove classe disabled se houver
+                const spinner = button.querySelector('.loading-spinner');
+                if (spinner) spinner.style.display = 'none'; // Esconde spinner se estiver visível
+                console.log('🔓 Botão ' + (stepNumber === 'aiVerification' ? 'da Verificação AI' : 'da Etapa ' + stepNumber) + ' habilitado');
+            }
+        }
+
+        function showResultsSection() {
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('downloadBtn').style.display = 'inline-flex';
+            document.getElementById('pdfBtn').style.display = 'inline-flex';
+        }
+        
+        function hideResultsSection() {
+             document.getElementById('resultsSection').style.display = 'none';
+             document.getElementById('downloadBtn').style.display = 'none';
+             document.getElementById('pdfBtn').style.display = 'none';
+        }
+
+        async function showResults() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma sessão ativa para carregar resultados', 'warning');
+                return;
+            }
+            try {
+                const response = await fetch('/api/workflow/results/' + currentSessionId);
+                const results = await response.json();
+
+                showResultsSection();
+
+                // Popula visão geral
+                populateOverview(results);
+
+                // Popula módulos
+                populateModules(results);
+
+                // Popula screenshots
+                populateScreenshots(results);
+
+                // Popula dados
+                populateData(results);
+
+            } catch (error) {
+                console.error('Erro ao carregar resultados:', error);
+                showNotification('Erro ao carregar resultados', 'error');
+            }
+        }
+
+        function populateOverview(results) {
+            const content = document.getElementById('overviewContent');
+            const modulesGenerated = results.modules_generated || 0;
+            const screenshotsCaptured = results.screenshots_captured || 0;
+            const availableFiles = results.available_files ? results.available_files.length : 0;
+            const finalReportAvailable = results.final_report_available ? 'SIM' : 'NÃO';
+
+            content.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${modulesGenerated}</div>
+                        <div class="stat-label">Módulos Gerados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${screenshotsCaptured}</div>
+                        <div class="stat-label">Screenshots</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${availableFiles}</div>
+                        <div class="stat-label">Arquivos Gerados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${finalReportAvailable}</div>
+                        <div class="stat-label">Relatório Final</div>
+                    </div>
+                </div>
+
+                ${results.final_report_available ? `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Relatório Final Disponível!</strong><br>
+                            Análise completa com 16 módulos especializados gerada com sucesso.
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function populateModules(results) {
+            const content = document.getElementById('modulesContent');
+            const modules = results.modules_list || [];
+
+            if (modules.length === 0) {
+                content.innerHTML = '<p>Nenhum módulo gerado ainda.</p>';
+                return;
+            }
+
+            const modulesList = modules.map((module, index) => `
+                <div class="alert alert-success">
+                    <i class="fas fa-file-alt"></i>
+                    <div>
+                        <strong>${module.replace('.md', '').replace('_', ' ').toUpperCase()}</strong><br>
+                        <small>Módulo ${index + 1}/16 - Gerado com sucesso</small>
+                    </div>
+                </div>
+            `).join('');
+
+            content.innerHTML = `
+                <h4>Módulos Gerados (${modules.length}/16)</h4>
+                ${modulesList}
+            `;
+        }
+
+        function populateScreenshots(results) {
+            const content = document.getElementById('screenshotsContent');
+            const screenshots = results.screenshots_list || [];
+
+            if (screenshots.length === 0) {
+                content.innerHTML = '<p>Nenhum screenshot capturado.</p>';
+                return;
+            }
+
+            const screenshotsList = screenshots.map((screenshot, index) => `
+                <div class="alert alert-info">
+                    <i class="fas fa-image"></i>
+                    <div>
+                        <strong>Screenshot ${index + 1}</strong><br>
+                        <small>${screenshot}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            content.innerHTML = `
+                <h4>Screenshots Capturados (${screenshots.length})</h4>
+                <p>Evidências visuais do conteúdo viral identificado durante a busca.</p>
+                ${screenshotsList}
+            `;
+        }
+
+        function populateData(results) {
+            const content = document.getElementById('dataContent');
+            const files = results.available_files || [];
+
+            const filesList = files.map(file => `
+                <div class="alert alert-secondary">
+                    <i class="fas fa-file"></i>
+                    <div>
+                        <strong>${file.name}</strong><br>
+                        <small>Tipo: ${file.type.toUpperCase()} • Tamanho: ${formatFileSize(file.size)}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            content.innerHTML = `
+                <h4>Arquivos Gerados (${files.length})</h4>
+                ${filesList}
+            `;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+        }
+
+        function resetWorkflow() {
+            if (confirm('Tem certeza que deseja resetar o workflow?')) {
+                currentSessionId = null;
+                workflowRunning = false;
+                if (progressInterval) clearInterval(progressInterval);
+                progressInterval = null;
+
+                hideProgressSection();
+                hideResultsSection();
+                
+                // Reset step cards and buttons
+                updateStepStatus(1, '');
+                updateStepStatus(2, '');
+                updateStepStatus('aiVerification', '');
+                updateStepStatus(3, '');
+                
+                // Mantém todos os botões sempre habilitados
+                document.getElementById('step1Btn').disabled = false;
+                document.getElementById('step2Btn').disabled = false;
+                document.getElementById('aiVerificationBtn').disabled = false;
+                document.getElementById('step3Btn').disabled = false;
+
+                // Limpa campos do formulário (opcional, pode ser sobrescrito ao carregar config)
+                document.getElementById('analysisForm').reset();
+                
+                showNotification('Workflow resetado', 'info');
+            }
+        }
+
+        async function downloadResults() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma sessão ativa para download', 'warning');
+                return;
+            }
+
+            try {
+                window.open('/api/workflow/download/' + currentSessionId + '/final_report', '_blank');
+                showNotification('Download iniciado', 'success');
+            } catch (error) {
+                showNotification('Erro no download', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+
+            const icons = {
+                success: 'fas fa-check-circle',
+                warning: 'fas fa-exclamation-triangle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle'
+            };
+
+            notification.innerHTML = `
+                <i class="${icons[type]}"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, duration);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+    </script>
+
+    <!-- Chat Flutuante -->
+    <div id="chatContainer" class="chat-container">
+        <div id="chatToggle" class="chat-toggle" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+            <span class="chat-badge" id="chatBadge" style="display: none;">1</span>
+        </div>
+        
+        <div id="chatWindow" class="chat-window" style="display: none;">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <i class="fas fa-robot"></i>
+                    <span>UBIE Assistant</span>
+                </div>
+                <div class="chat-actions">
+                    <button onclick="clearChat()" class="chat-action-btn" title="Limpar conversa">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button onclick="toggleChat()" class="chat-action-btn" title="Fechar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="chatMessages" class="chat-messages">
+                <div class="chat-message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            Olá! Sou o UBIE, seu assistente especializado em análise de mercado e marketing digital. Como posso ajudar você hoje?
+                        </div>
+                        <div class="message-time">Agora</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chatInput" class="chat-input" 
+                           placeholder="Digite sua mensagem..." 
+                           onkeypress="handleChatKeyPress(event)">
+                    <button onclick="sendChatMessage()" class="chat-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div id="chatTyping" class="chat-typing" style="display: none;">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span>UBIE está digitando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Chat Styles */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .chat-toggle i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 500px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .chat-action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            max-width: 85%;
+        }
+
+        .chat-message.user-message {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .bot-message .message-avatar {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .user-message .message-avatar {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-text {
+            background: var(--bg-tertiary);
+            padding: 12px 15px;
+            border-radius: 15px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .user-message .message-text {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .user-message .message-time {
+            text-align: left;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .chat-send-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-typing {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .chat-window {
+                width: 320px;
+                height: 450px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .chat-window {
+                width: calc(100vw - 20px);
+                height: 400px;
+                right: -10px;
+            }
+        }
+    </style>
+
+    <script>
+        // Chat Variables
+        let chatSessionId = null;
+        let chatOpen = false;
+
+        // Chat Functions
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            const chatToggle = document.getElementById('chatToggle');
+            
+            chatOpen = !chatOpen;
+            
+            if (chatOpen) {
+                chatWindow.style.display = 'flex';
+                chatToggle.style.transform = 'scale(0.9)';
+                document.getElementById('chatInput').focus();
+                
+                // Inicializa sessão de chat se necessário
+                if (!chatSessionId) {
+                    chatSessionId = 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                }
+            } else {
+                chatWindow.style.display = 'none';
+                chatToggle.style.transform = 'scale(1)';
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Limpa input
+            input.value = '';
+            
+            // Adiciona mensagem do usuário
+            addChatMessage(message, 'user');
+            
+            // Mostra indicador de digitação
+            showTypingIndicator();
+            
+            try {
+                const response = await fetch('/api/chat/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: chatSessionId,
+                        context: {
+                            current_session: currentSessionId,
+                            page: 'main_interface'
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove indicador de digitação
+                hideTypingIndicator();
+                
+                if (data.success) {
+                    // Adiciona resposta do bot
+                    addChatMessage(data.response, 'bot', data.metadata);
+                } else {
+                    addChatMessage('Desculpe, ocorreu um erro. Tente novamente.', 'bot');
+                }
+                
+            } catch (error) {
+                console.error('Erro no chat:', error);
+                hideTypingIndicator();
+                addChatMessage('Erro de conexão. Verifique sua internet e tente novamente.', 'bot');
+            }
+        }
+
+        function addChatMessage(message, sender, metadata = {}) {
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            
+            const avatar = sender === 'user' ? 
+                '<i class="fas fa-user"></i>' : 
+                '<i class="fas fa-robot"></i>';
+            
+            const time = new Date().toLocaleTimeString('pt-BR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    ${avatar}
+                </div>
+                <div class="message-content">
+                    <div class="message-text">${message}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            
+            // Scroll para baixo
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('chatTyping').style.display = 'flex';
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('chatTyping').style.display = 'none';
+        }
+
+        async function clearChat() {
+            if (!chatSessionId) return;
+            
+            try {
+                await fetch(`/api/chat/clear/${chatSessionId}`, {
+                    method: 'POST'
+                });
+                
+                // Limpa mensagens visualmente
+                const messagesContainer = document.getElementById('chatMessages');
+                messagesContainer.innerHTML = `
+                    <div class="chat-message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Conversa limpa! Como posso ajudar você?
+                            </div>
+                            <div class="message-time">Agora</div>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Erro ao limpar chat:', error);
+            }
+        }
+
+        // Inicialização do chat
+        // ✅ NOVAS FUNÇÕES: Log aprimorado e funcionalidades extras
+        function toggleActivityLog() {
+            const logContent = document.querySelector('.log-content');
+            const toggleBtn = document.querySelector('.btn-toggle-log i');
+            
+            if (logContent.style.display === 'none') {
+                logContent.style.display = 'block';
+                toggleBtn.className = 'fas fa-chevron-up';
+            } else {
+                logContent.style.display = 'none';
+                toggleBtn.className = 'fas fa-chevron-down';
+            }
+        }
+        
+        function addLogEntry(message, type = 'info') {
+            const logContent = document.getElementById('logContent');
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', { hour12: false });
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.innerHTML = `
+                <span class="log-time">${timeStr}</span>
+                <span class="log-message">${message}</span>
+            `;
+            
+            logContent.appendChild(logEntry);
+            logContent.scrollTop = logContent.scrollHeight;
+            
+            // Mostrar log se estiver oculto
+            const activityLog = document.getElementById('activityLog');
+            if (activityLog.style.display === 'none') {
+                activityLog.style.display = 'block';
+            }
+        }
+        
+        function exportResults() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma análise para exportar', 'warning');
+                return;
+            }
+            
+            addLogEntry('Iniciando exportação de resultados...', 'info');
+            showNotification('Funcionalidade de exportação em desenvolvimento', 'info');
+        }
+
+        async function generatePDF() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma análise para gerar PDF', 'warning');
+                return;
+            }
+            
+            try {
+                addLogEntry('Iniciando geração de PDF...', 'info');
+                showNotification('Gerando relatório PDF...', 'info');
+                
+                // Desabilita botão durante geração
+                const pdfBtn = document.getElementById('pdfBtn');
+                const originalText = pdfBtn.innerHTML;
+                pdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
+                pdfBtn.disabled = true;
+                
+                const response = await fetch(`/api/generate_pdf/${currentSessionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    addLogEntry('PDF gerado com sucesso!', 'success');
+                    showNotification('PDF gerado com sucesso!', 'success');
+                    
+                    // Inicia download automático
+                    const downloadUrl = `/api${result.download_url}`;
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = result.pdf_filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    addLogEntry(`Arquivo: ${result.pdf_filename} (${(result.file_size / 1024 / 1024).toFixed(2)} MB)`, 'info');
+                } else {
+                    addLogEntry(`Erro na geração do PDF: ${result.error}`, 'error');
+                    showNotification(`Erro: ${result.error}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                addLogEntry('Erro ao gerar PDF', 'error');
+                showNotification('Erro ao gerar PDF', 'error');
+            } finally {
+                // Reabilita botão
+                const pdfBtn = document.getElementById('pdfBtn');
+                pdfBtn.innerHTML = originalText;
+                pdfBtn.disabled = false;
+            }
+        }
+        
+        function shareResults() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma análise para compartilhar', 'warning');
+                return;
+            }
+            
+            addLogEntry('Preparando compartilhamento...', 'info');
+            showNotification('Funcionalidade de compartilhamento em desenvolvimento', 'info');
+        }
+        
+        // ✅ MELHORADO: Função de notificação aprimorada
+        function showNotification(message, type = 'info', duration = 5000) {
+            // Adicionar ao log também
+            addLogEntry(message, type);
+            
+            // Notificação visual existente
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                                   type === 'error' ? 'fa-exclamation-circle' : 
+                                   type === 'warning' ? 'fa-exclamation-triangle' : 
+                                   'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remover após duração especificada
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, duration);
+        }
+        
+        // ✅ MELHORADO: Atualizar progresso com log
+        function updateProgress(stepNumber, percentage, message = '') {
+            const progressBar = document.getElementById(`progress${stepNumber}`);
+            const statusElement = document.getElementById(`status${stepNumber}`);
+            
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = percentage + '%';
+            }
+            
+            if (message && statusElement) {
+                statusElement.textContent = message;
+                addLogEntry(`Etapa ${stepNumber}: ${message} (${percentage}%)`, 'info');
+            }
+        }
+        
+        // ✅ MELHORADO: Função de reset aprimorada
+        function resetInterface() {
+            // Reset existente
+            currentSessionId = null;
+            
+            // Limpar log
+            const logContent = document.getElementById('logContent');
+            logContent.innerHTML = `
+                <div class="log-entry">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-message">Sistema reinicializado</span>
+                </div>
+            `;
+            
+            // Ocultar log
+            document.getElementById('activityLog').style.display = 'none';
+            
+            addLogEntry('Interface reinicializada', 'success');
+        }
+
+        // ===== GERENCIAMENTO DE MODELOS =====
+        let modelsData = {
+            available: {},
+            installed: {},
+            downloading: new Set()
+        };
+
+        function toggleModelsSection() {
+            const section = document.getElementById('modelsSection');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                loadAvailableModels();
+                loadInstalledModels();
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        function switchModelsTab(tabName) {
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.models-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.models-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Ativar aba selecionada
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.getElementById(tabName + 'Content').classList.add('active');
+
+            // Carregar dados específicos da aba
+            switch(tabName) {
+                case 'download':
+                    loadAvailableModels();
+                    break;
+                case 'installed':
+                    loadInstalledModels();
+                    break;
+                case 'recommendation':
+                    updateRecommendations();
+                    break;
+                case 'optimize':
+                    // Não carrega automaticamente, usuário deve clicar
+                    break;
+            }
+        }
+
+        async function loadAvailableModels() {
+            try {
+                const response = await fetch('/api/models/available');
+                const result = await response.json();
+
+                if (result.success) {
+                    modelsData.available = result.models;
+                    displayAvailableModels(result.models, result.categories, result.system_specs);
+                } else {
+                    showNotification('Erro ao carregar modelos: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar modelos:', error);
+                showNotification('Erro ao carregar modelos disponíveis', 'error');
+            }
+        }
+
+        function displayAvailableModels(models, categories, systemSpecs) {
+            const container = document.getElementById('availableModels');
+            
+            // Atualizar estatísticas
+            document.getElementById('availableCount').textContent = Object.keys(models).length;
+            document.getElementById('systemRam').textContent = systemSpecs.ram_gb.toFixed(1) + 'GB';
+            
+            let html = '';
+            
+            // Agrupar por categoria
+            const categoryOrder = ['Micro', 'Ultra-Leve', 'Compacto', 'Leve', 'Balanceado', 'Premium'];
+            
+            for (const category of categoryOrder) {
+                if (categories[category]) {
+                    html += `
+                        <h5 style="color: #007bff; margin: 25px 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid rgba(0,123,255,0.3);">
+                            <i class="fas fa-layer-group"></i> ${category}
+                        </h5>
+                    `;
+                    
+                    for (const model of categories[category]) {
+                        const isDownloading = modelsData.downloading.has(model.id);
+                        
+                        html += `
+                            <div class="model-card" id="model-${model.id}">
+                                <div class="model-header">
+                                    <div class="model-info">
+                                        <h4>${model.name}</h4>
+                                        <div class="model-description">${model.description}</div>
+                                        <div class="model-status available">
+                                            <i class="fas fa-cloud-download-alt"></i> Disponível
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="model-specs">
+                                    <div class="model-spec">
+                                        <span class="model-spec-label">Tamanho</span>
+                                        <span class="model-spec-value">${model.size}</span>
+                                    </div>
+                                    <div class="model-spec">
+                                        <span class="model-spec-label">Velocidade</span>
+                                        <span class="model-spec-value">${model.speed}</span>
+                                    </div>
+                                    <div class="model-spec">
+                                        <span class="model-spec-label">Qualidade</span>
+                                        <span class="model-spec-value">${model.quality}</span>
+                                    </div>
+                                    <div class="model-spec">
+                                        <span class="model-spec-label">RAM Mín.</span>
+                                        <span class="model-spec-value">${model.memory}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="model-actions">
+                                    <button class="model-btn" onclick="downloadModel('${model.id}')" 
+                                            ${isDownloading ? 'disabled' : ''}>
+                                        <i class="fas fa-download"></i> 
+                                        ${isDownloading ? 'Baixando...' : 'Baixar'}
+                                    </button>
+                                    <button class="model-btn" onclick="showModelDetails('${model.id}')">
+                                        <i class="fas fa-info-circle"></i> Detalhes
+                                    </button>
+                                </div>
+                                
+                                <div class="download-progress" id="progress-${model.id}">
+                                    <div class="progress-header">
+                                        <span>Baixando modelo...</span>
+                                        <span id="progress-percent-${model.id}">0%</span>
+                                    </div>
+                                    <div class="progress-bar-models">
+                                        <div class="progress-fill" id="progress-fill-${model.id}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            
+            container.innerHTML = html;
+        }
+
+        async function loadInstalledModels() {
+            try {
+                const response = await fetch('/api/models/installed');
+                const result = await response.json();
+
+                if (result.success) {
+                    modelsData.installed = result;
+                    displayInstalledModels(result);
+                } else {
+                    showNotification('Erro ao carregar modelos instalados: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar modelos instalados:', error);
+                showNotification('Erro ao carregar modelos instalados', 'error');
+            }
+        }
+
+        function displayInstalledModels(data) {
+            const container = document.getElementById('installedModels');
+            
+            // Atualizar estatísticas
+            const totalModels = (data.current_model ? 1 : 0) + data.other_models.length;
+            document.getElementById('installedCount').textContent = totalModels;
+            document.getElementById('totalSize').textContent = data.stats.total_size_gb.toFixed(1) + 'GB';
+            document.getElementById('activeModel').textContent = data.current_model ? 
+                data.current_model.filename.replace('.gguf', '') : 'Nenhum';
+            
+            let html = '';
+            
+            // Modelo ativo
+            if (data.current_model) {
+                html += `
+                    <div class="model-card active">
+                        <div class="model-header">
+                            <div class="model-info">
+                                <h4><i class="fas fa-star"></i> ${data.current_model.filename}</h4>
+                                <div class="model-description">Modelo atualmente ativo no sistema</div>
+                                <div class="model-status active">
+                                    <i class="fas fa-check-circle"></i> Ativo
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-specs">
+                            <div class="model-spec">
+                                <span class="model-spec-label">Tamanho</span>
+                                <span class="model-spec-value">${data.current_model.size_gb.toFixed(1)}GB</span>
+                            </div>
+                            <div class="model-spec">
+                                <span class="model-spec-label">Modificado</span>
+                                <span class="model-spec-value">${new Date(data.current_model.modified).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="model-actions">
+                            <button class="model-btn success" disabled>
+                                <i class="fas fa-check"></i> Modelo Ativo
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Outros modelos
+            if (data.other_models.length > 0) {
+                html += '<h5 style="color: #6c757d; margin: 25px 0 15px 0;">Outros Modelos</h5>';
+                
+                for (const model of data.other_models) {
+                    html += `
+                        <div class="model-card">
+                            <div class="model-header">
+                                <div class="model-info">
+                                    <h4>${model.filename}</h4>
+                                    <div class="model-description">Modelo disponível para ativação</div>
+                                    <div class="model-status available">
+                                        <i class="fas fa-hard-drive"></i> Instalado
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="model-specs">
+                                <div class="model-spec">
+                                    <span class="model-spec-label">Tamanho</span>
+                                    <span class="model-spec-value">${model.size_gb.toFixed(1)}GB</span>
+                                </div>
+                                <div class="model-spec">
+                                    <span class="model-spec-label">Modificado</span>
+                                    <span class="model-spec-value">${new Date(model.modified).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="model-actions">
+                                <button class="model-btn success" onclick="switchModel('${model.filename}')">
+                                    <i class="fas fa-exchange-alt"></i> Ativar
+                                </button>
+                                <button class="model-btn danger" onclick="deleteModel('${model.filename}')">
+                                    <i class="fas fa-trash"></i> Remover
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (html === '') {
+                html = `
+                    <div style="text-align: center; padding: 40px; color: #6c757d;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h4>Nenhum modelo instalado</h4>
+                        <p>Vá para a aba "Baixar Modelos" para instalar seu primeiro modelo</p>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        async function downloadModel(modelId) {
+            try {
+                // Marcar como baixando
+                modelsData.downloading.add(modelId);
+                
+                // Atualizar UI
+                const button = document.querySelector(`#model-${modelId} .model-btn`);
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+                
+                // Mostrar barra de progresso
+                const progressDiv = document.getElementById(`progress-${modelId}`);
+                progressDiv.classList.add('active');
+                
+                const response = await fetch('/api/models/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model_id: modelId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Simular progresso (em produção seria via WebSocket)
+                    simulateDownloadProgress(modelId);
+                } else {
+                    if (result.existing) {
+                        showNotification('Modelo já existe! Verifique a aba "Modelos Instalados"', 'warning');
+                    } else {
+                        showNotification('Erro no download: ' + result.error, 'error');
+                    }
+                    
+                    // Resetar UI
+                    modelsData.downloading.delete(modelId);
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-download"></i> Baixar';
+                    progressDiv.classList.remove('active');
+                }
+            } catch (error) {
+                console.error('Erro no download:', error);
+                showNotification('Erro ao iniciar download', 'error');
+                
+                // Resetar UI
+                modelsData.downloading.delete(modelId);
+                const button = document.querySelector(`#model-${modelId} .model-btn`);
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-download"></i> Baixar';
+                document.getElementById(`progress-${modelId}`).classList.remove('active');
+            }
+        }
+
+        function simulateDownloadProgress(modelId) {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Download concluído
+                    setTimeout(() => {
+                        modelsData.downloading.delete(modelId);
+                        document.getElementById(`progress-${modelId}`).classList.remove('active');
+                        
+                        const button = document.querySelector(`#model-${modelId} .model-btn`);
+                        button.innerHTML = '<i class="fas fa-check"></i> Baixado';
+                        button.classList.add('success');
+                        
+                        showNotification('Download concluído! Modelo pronto para uso.', 'success');
+                        
+                        // Recarregar modelos instalados
+                        loadInstalledModels();
+                    }, 1000);
+                }
+                
+                document.getElementById(`progress-fill-${modelId}`).style.width = progress + '%';
+                document.getElementById(`progress-percent-${modelId}`).textContent = Math.round(progress) + '%';
+            }, 500);
+        }
+
+        async function switchModel(filename) {
+            if (!confirm(`Deseja ativar o modelo "${filename}"?\n\nO modelo atual será salvo como backup.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/models/switch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: filename })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    loadInstalledModels();
+                } else {
+                    showNotification('Erro ao trocar modelo: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao trocar modelo:', error);
+                showNotification('Erro ao trocar modelo', 'error');
+            }
+        }
+
+        async function deleteModel(filename) {
+            if (!confirm(`Deseja remover permanentemente o modelo "${filename}"?\n\nEsta ação não pode ser desfeita.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/models/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: filename })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    loadInstalledModels();
+                } else {
+                    showNotification('Erro ao remover modelo: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao remover modelo:', error);
+                showNotification('Erro ao remover modelo', 'error');
+            }
+        }
+
+        async function updateRecommendations() {
+            const ram = document.getElementById('ramFilter').value;
+            const priority = document.getElementById('priorityFilter').value;
+            const useCase = document.getElementById('useCaseFilter').value;
+            
+            try {
+                const response = await fetch(`/api/models/recommendation?ram=${ram}&priority=${priority}&use_case=${useCase}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayRecommendations(result.recommendations, result.criteria);
+                } else {
+                    showNotification('Erro ao obter recomendações: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao obter recomendações:', error);
+                showNotification('Erro ao obter recomendações', 'error');
+            }
+        }
+
+        function displayRecommendations(recommendations, criteria) {
+            const container = document.getElementById('recommendedModels');
+            
+            let html = `
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(0,123,255,0.05); border-radius: 8px;">
+                    <h6 style="color: #007bff; margin-bottom: 10px;">
+                        <i class="fas fa-filter"></i> Critérios Selecionados:
+                    </h6>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <span style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                            RAM: ${criteria.ram === 'low' ? '2-4GB' : criteria.ram === 'medium' ? '4-8GB' : '8GB+'}
+                        </span>
+                        <span style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                            Prioridade: ${criteria.priority === 'speed' ? 'Velocidade' : criteria.priority === 'quality' ? 'Qualidade' : 'Equilibrado'}
+                        </span>
+                        <span style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                            Uso: ${criteria.use_case === 'general' ? 'Geral' : criteria.use_case === 'complex' ? 'Complexo' : criteria.use_case === 'code' ? 'Código' : 'Português'}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            if (recommendations.length === 0) {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: #6c757d;">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h4>Nenhuma recomendação encontrada</h4>
+                        <p>Tente ajustar os filtros acima</p>
+                    </div>
+                `;
+            } else {
+                html += '<h6 style="color: #28a745; margin-bottom: 15px;"><i class="fas fa-star"></i> Modelos Recomendados:</h6>';
+                
+                recommendations.forEach((model, index) => {
+                    const badge = index === 0 ? '🥇 MELHOR ESCOLHA' : index === 1 ? '🥈 SEGUNDA OPÇÃO' : '🥉 TERCEIRA OPÇÃO';
+                    
+                    html += `
+                        <div class="model-card" style="border-color: ${index === 0 ? 'rgba(40,167,69,0.5)' : 'rgba(0,123,255,0.3)'};">
+                            <div class="model-header">
+                                <div class="model-info">
+                                    <h4>
+                                        <span style="background: ${index === 0 ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)'}; 
+                                                     padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; margin-right: 10px;">
+                                            ${badge}
+                                        </span>
+                                        ${model.name}
+                                    </h4>
+                                    <div class="model-description">${model.description}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="model-specs">
+                                <div class="model-spec">
+                                    <span class="model-spec-label">Tamanho</span>
+                                    <span class="model-spec-value">${model.size}</span>
+                                </div>
+                                <div class="model-spec">
+                                    <span class="model-spec-label">Velocidade</span>
+                                    <span class="model-spec-value">${model.speed}</span>
+                                </div>
+                                <div class="model-spec">
+                                    <span class="model-spec-label">Qualidade</span>
+                                    <span class="model-spec-value">${model.quality}</span>
+                                </div>
+                                <div class="model-spec">
+                                    <span class="model-spec-label">Uso</span>
+                                    <span class="model-spec-value">${model.use_case}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="model-actions">
+                                <button class="model-btn success" onclick="downloadModel('${model.id}')">
+                                    <i class="fas fa-download"></i> Baixar Recomendado
+                                </button>
+                                <button class="model-btn" onclick="showModelDetails('${model.id}')">
+                                    <i class="fas fa-info-circle"></i> Detalhes
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            container.innerHTML = html;
+        }
+
+        async function analyzeSystem() {
+            try {
+                const response = await fetch('/api/models/optimize');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayOptimizationResults(result);
+                } else {
+                    showNotification('Erro na análise: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na análise:', error);
+                showNotification('Erro ao analisar sistema', 'error');
+            }
+        }
+
+        function displayOptimizationResults(data) {
+            const container = document.getElementById('optimizationResults');
+            
+            const settings = data.optimized_settings;
+            const specs = data.system_specs;
+            const recommendations = data.recommendations;
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <h6 style="color: #007bff; margin-bottom: 15px;">
+                        <i class="fas fa-desktop"></i> Especificações do Sistema:
+                    </h6>
+                    <div class="models-stats">
+                        <div class="models-stat">
+                            <div class="models-stat-value">${specs.ram_gb.toFixed(1)}GB</div>
+                            <div class="models-stat-label">RAM Total</div>
+                        </div>
+                        <div class="models-stat">
+                            <div class="models-stat-value">${specs.cpu_cores}</div>
+                            <div class="models-stat-label">CPU Cores</div>
+                        </div>
+                        <div class="models-stat">
+                            <div class="models-stat-value">${specs.gpu_available ? 'Sim' : 'Não'}</div>
+                            <div class="models-stat-label">GPU Disponível</div>
+                        </div>
+                        <div class="models-stat">
+                            <div class="models-stat-value">${data.model_size_gb.toFixed(1)}GB</div>
+                            <div class="models-stat-label">Modelo Ativo</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h6 style="color: #28a745; margin-bottom: 15px;">
+                        <i class="fas fa-cogs"></i> Configurações Otimizadas:
+                    </h6>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                            <div style="color: #6c757d; font-size: 0.8rem;">Max Tokens</div>
+                            <div style="color: #e9ecef; font-weight: 600; font-size: 1.2rem;">${settings.max_tokens}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                            <div style="color: #6c757d; font-size: 0.8rem;">Context Length</div>
+                            <div style="color: #e9ecef; font-weight: 600; font-size: 1.2rem;">${settings.context_length}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                            <div style="color: #6c757d; font-size: 0.8rem;">Batch Size</div>
+                            <div style="color: #e9ecef; font-weight: 600; font-size: 1.2rem;">${settings.batch_size}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                            <div style="color: #6c757d; font-size: 0.8rem;">CPU Threads</div>
+                            <div style="color: #e9ecef; font-weight: 600; font-size: 1.2rem;">${settings.threads}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                            <div style="color: #6c757d; font-size: 0.8rem;">GPU Layers</div>
+                            <div style="color: #e9ecef; font-weight: 600; font-size: 1.2rem;">${settings.gpu_layers}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                            <div style="color: #6c757d; font-size: 0.8rem;">Low VRAM</div>
+                            <div style="color: #e9ecef; font-weight: 600; font-size: 1.2rem;">${settings.low_vram ? 'Sim' : 'Não'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (recommendations.length > 0) {
+                html += `
+                    <div>
+                        <h6 style="color: #ffc107; margin-bottom: 15px;">
+                            <i class="fas fa-exclamation-triangle"></i> Recomendações:
+                        </h6>
+                        <ul style="color: #adb5bd; margin: 0; padding-left: 20px;">
+                `;
+                
+                recommendations.forEach(rec => {
+                    html += `<li style="margin-bottom: 8px;">${rec}</li>`;
+                });
+                
+                html += '</ul></div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function showModelDetails(modelId) {
+            const model = modelsData.available[modelId];
+            if (!model) return;
+            
+            const modal = document.getElementById('sessionModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            const footer = document.getElementById('modalFooter');
+            
+            title.textContent = 'Detalhes do Modelo';
+            
+            body.innerHTML = `
+                <div style="color: #e9ecef;">
+                    <h5 style="color: #007bff; margin-bottom: 15px;">${model.name}</h5>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <strong>Descrição:</strong><br>
+                        <span style="color: #adb5bd;">${model.description}</span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div>
+                            <strong>Categoria:</strong><br>
+                            <span style="color: #adb5bd;">${model.category}</span>
+                        </div>
+                        <div>
+                            <strong>Tamanho:</strong><br>
+                            <span style="color: #adb5bd;">${model.size}</span>
+                        </div>
+                        <div>
+                            <strong>RAM Mínima:</strong><br>
+                            <span style="color: #adb5bd;">${model.memory}</span>
+                        </div>
+                        <div>
+                            <strong>Caso de Uso:</strong><br>
+                            <span style="color: #adb5bd;">${model.use_case}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <strong>Velocidade:</strong><br>
+                            <span style="color: #adb5bd; font-size: 1.2rem;">${model.speed}</span>
+                        </div>
+                        <div>
+                            <strong>Qualidade:</strong><br>
+                            <span style="color: #adb5bd; font-size: 1.2rem;">${model.quality}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            footer.innerHTML = `
+                <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+                <button class="btn btn-primary" onclick="downloadModel('${modelId}'); closeModal();">
+                    <i class="fas fa-download"></i> Baixar Modelo
+                </button>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('sessionModal').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar log
+            addLogEntry('Sistema ARQV30 Enhanced inicializado', 'success');
+            addLogEntry('Aguardando configuração da análise...', 'info');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "auto_disable_threshold": 5,
+  "rate_limit_cooldown": 300,
+  "credit_check_interval": 3600,
+  "fallback_enabled": true,
+  "smart_rotation": true,
+  "cost_optimization": true
+}

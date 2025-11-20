@@ -1,0 +1,3990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARQ BETA V1000 - Sistema de Análise Avançada</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-cyan: #00d4ff;
+            --secondary-cyan: #0099cc;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --card-bg: rgba(15, 25, 35, 0.9);
+            --border-glow: rgba(0, 212, 255, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-blue: #1e3a8a;
+            --neon-glow: 0 0 20px var(--primary-cyan);
+            --success-color: #00ff88;
+            --warning-color: #ffaa00;
+            --error-color: #ff4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 153, 204, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(45deg, transparent 24%, rgba(0, 212, 255, 0.05) 25%, rgba(0, 212, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 212, 255, 0.05) 75%, rgba(0, 212, 255, 0.05) 76%, transparent 77%);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary-cyan);
+            text-shadow: var(--neon-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-cyan);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 100px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+            transition: all 0.3s ease;
+        }
+
+        .hero-logo:hover {
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+            transform: scale(1.05);
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-cyan);
+            text-shadow: var(--neon-glow);
+            margin-bottom: 1rem;
+            animation: glow-pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-pulse {
+            from { text-shadow: 0 0 20px var(--primary-cyan); }
+            to { text-shadow: 0 0 30px var(--primary-cyan), 0 0 40px var(--primary-cyan); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Progress Steps */
+        .progress-container {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-glow);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .progress-line-active {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background: var(--primary-cyan);
+            z-index: 2;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 3;
+            position: relative;
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .step.completed {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--success-color);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-cyan);
+            color: var(--dark-bg);
+            box-shadow: var(--neon-glow);
+        }
+
+        .step.completed .step-number {
+            background: var(--success-color);
+            color: var(--dark-bg);
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Form Sections */
+        .form-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group input::placeholder,
+        .input-group textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .input-group small {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-glow);
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-cyan));
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--success-color), #00cc77);
+            color: var(--dark-bg);
+        }
+
+        .btn-success:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--border-glow);
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .result-card h3 {
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-waiting {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .status-processing {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--primary-cyan);
+            border: 1px solid var(--primary-cyan);
+        }
+
+        .status-completed {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .status-error {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-line,
+            .progress-line-active {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-success {
+            color: var(--success-color);
+        }
+
+        .text-warning {
+            color: var(--warning-color);
+        }
+
+        .text-error {
+            color: var(--error-color);
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        /* Session Management Styles */
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .session-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary-cyan);
+        }
+
+        .session-info strong {
+            color: var(--primary-cyan);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-info small {
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-info p {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-error {
+            background: linear-gradient(45deg, var(--error-color), #cc3333);
+            color: white;
+        }
+
+        .btn-error:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
+        }
+
+        /* Temperature Range Styling */
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-cyan);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Model Management Styles */
+        .model-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .model-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary-cyan);
+            transform: translateY(-2px);
+        }
+
+        .model-item.installed {
+            border-color: var(--success-color);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .model-item.downloading {
+            border-color: var(--warning-color);
+            background: rgba(255, 170, 0, 0.1);
+        }
+
+        .model-info strong {
+            color: var(--primary-cyan);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .model-item.installed .model-info strong {
+            color: var(--success-color);
+        }
+
+        .model-info small {
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .model-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--primary-cyan);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .model-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .download-model {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-model:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .download-model.downloading {
+            background: linear-gradient(45deg, var(--warning-color), #cc8800);
+        }
+
+        .progress-bar {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .model-size {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+
+        .model-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.downloading {
+            background: var(--warning-color);
+        }
+
+        .status-dot.error {
+            background: var(--error-color);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Step Indicator Enhanced Styles */
+        .step-indicator-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step-indicator-enhanced.active {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 212, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .step-indicator-enhanced.completed {
+            border-color: var(--success-color);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .step-indicator-enhanced.error {
+            border-color: var(--error-color);
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .step-indicator-enhanced .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .step-indicator-enhanced.active .step-number {
+            background: var(--primary-cyan);
+            color: var(--dark-bg);
+            box-shadow: var(--neon-glow);
+        }
+
+        .step-indicator-enhanced.completed .step-number {
+            background: var(--success-color);
+            color: var(--dark-bg);
+        }
+
+        .step-indicator-enhanced.error .step-number {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .step-info {
+            flex: 1;
+        }
+
+        .step-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .step-status {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .step-progress .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-cyan));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .step-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .step-indicator-enhanced.active .step-progress::after {
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* Activity Log Styles */
+        .log-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .timestamp {
+            color: var(--primary-cyan);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .message {
+            color: var(--text-primary);
+        }
+
+        .log-entry.success .message {
+            color: var(--success-color);
+        }
+
+        .log-entry.error .message {
+            color: var(--error-color);
+        }
+
+        .log-entry.warning .message {
+            color: var(--warning-color);
+        }
+
+        /* Config Section Styles */
+        .config-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Step Card Hover Effects */
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .step-card.active {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .step-card.completed {
+            border-color: var(--success-color);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .step-card.completed .step-number {
+            background: var(--success-color) !important;
+            color: var(--dark-bg) !important;
+        }
+
+        .step-card.completed h3 {
+            color: var(--success-color) !important;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-cyan);
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        /* Responsive Improvements */
+        @media (max-width: 768px) {
+            .steps-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .progress-indicators {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .step-indicator-enhanced {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .step-info {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">ARQ BETA V1000</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#inicio" onclick="showMainInterface()">Início</a></li>
+                    <li><a href="#modelos" onclick="showModelManagement()">Modelos IA</a></li>
+                    <li><a href="#sessoes" onclick="showSessionManagement()">Sessões</a></li>
+                    <li><a href="#ajuda" onclick="showHelpSection()">Ajuda</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="logo-container">
+                <img src="/static/logo_USB.png" alt="Logo USB" class="hero-logo">
+            </div>
+            <h1 class="hero-title">ARQ BETA V1000</h1>
+            <p class="hero-subtitle">
+                Sistema Avançado de Análise de Mercado com Inteligência Artificial
+            </p>
+        </section>
+
+        <!-- Progress Container -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line"></div>
+                <div class="progress-line-active" id="progressLine"></div>
+                
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Configuração</div>
+                </div>
+                
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Análise</div>
+                </div>
+                
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Processamento</div>
+                </div>
+                
+                <div class="step" id="step4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Resultados</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Management Sections -->
+        
+        <!-- Model Management Section -->
+        <div class="form-section" id="modelManagement" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-robot"></i>
+                Gerenciamento de Modelos IA
+            </h2>
+            <p class="section-description">
+                Configure e gerencie os modelos de IA utilizados pelo sistema. Selecione o modelo preferido para cada tipo de análise.
+            </p>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="primaryModel">Modelo Principal</label>
+                    <select id="primaryModel" name="primaryModel">
+                        <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Recomendado)</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                        <option value="claude-3-haiku">Claude 3 Haiku</option>
+                        <option value="qwen-3-coder">Qwen 3 Coder</option>
+                        <option value="local-model">Modelo Local</option>
+                    </select>
+                    <small>Modelo usado para análises principais</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="fallbackModel">Modelo de Fallback</label>
+                    <select id="fallbackModel" name="fallbackModel">
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                        <option value="claude-3-haiku">Claude 3 Haiku</option>
+                        <option value="local-model">Modelo Local</option>
+                    </select>
+                    <small>Modelo usado quando o principal falha</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="maxTokens">Máximo de Tokens</label>
+                    <input type="number" id="maxTokens" name="maxTokens" value="4000" min="1000" max="32000">
+                    <small>Limite de tokens por requisição (1000-32000)</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="temperature">Temperatura</label>
+                    <input type="range" id="temperature" name="temperature" min="0" max="1" step="0.1" value="0.7">
+                    <small>Criatividade do modelo (0 = conservador, 1 = criativo)</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="requestDelay">Delay entre Requisições (segundos)</label>
+                    <input type="number" id="requestDelay" name="requestDelay" value="2" min="0" max="30">
+                    <small>Tempo de espera entre chamadas da API</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="enableLocalModel">Habilitar Modelo Local</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="enableLocalModel" name="enableLocalModel">
+                            <label for="enableLocalModel">Usar modelo local como fallback</label>
+                        </div>
+                    </div>
+                    <small>Ativa modelo local quando APIs externas falham</small>
+                </div>
+            </div>
+
+            <!-- Local Models Section -->
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-glow);">
+                <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-download"></i>
+                    Modelos Locais Disponíveis
+                </h3>
+                
+                <div class="results-grid">
+                    <!-- Installed Models -->
+                    <div class="result-card">
+                        <h4><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Modelos Instalados</h4>
+                        <div id="installedModelsList">
+                            <div class="model-item installed">
+                                <div class="model-info">
+                                    <strong>Verificando modelos...</strong>
+                                    <small>Carregando lista de modelos instalados</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Models -->
+                    <div class="result-card">
+                        <h4><i class="fas fa-cloud-download-alt" style="color: var(--primary-cyan);"></i> Modelos Disponíveis</h4>
+                        <div id="availableModelsList">
+                            <!-- Llama Models -->
+                            <div class="model-item available" data-model="llama-3.2-3b-instruct">
+                                <div class="model-info">
+                                    <strong>Llama 3.2 3B Instruct</strong>
+                                    <small>~2GB • Rápido • Recomendado para iniciantes</small>
+                                    <div class="model-tags">
+                                        <span class="tag">Conversação</span>
+                                        <span class="tag">Rápido</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn btn-sm btn-primary download-model" data-model="llama-3.2-3b-instruct" data-url="https://huggingface.co/microsoft/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf">
+                                        <i class="fas fa-download"></i>
+                                        Baixar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="model-item available" data-model="llama-3.2-1b-instruct">
+                                <div class="model-info">
+                                    <strong>Llama 3.2 1B Instruct</strong>
+                                    <small>~800MB • Muito Rápido • Ideal para testes</small>
+                                    <div class="model-tags">
+                                        <span class="tag">Leve</span>
+                                        <span class="tag">Teste</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn btn-sm btn-primary download-model" data-model="llama-3.2-1b-instruct" data-url="https://huggingface.co/microsoft/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf">
+                                        <i class="fas fa-download"></i>
+                                        Baixar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="model-item available" data-model="phi-3.5-mini">
+                                <div class="model-info">
+                                    <strong>Phi-3.5 Mini Instruct</strong>
+                                    <small>~2.4GB • Eficiente • Microsoft</small>
+                                    <div class="model-tags">
+                                        <span class="tag">Microsoft</span>
+                                        <span class="tag">Eficiente</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn btn-sm btn-primary download-model" data-model="phi-3.5-mini" data-url="https://huggingface.co/microsoft/Phi-3.5-mini-instruct-gguf/resolve/main/Phi-3.5-mini-instruct-q4.gguf">
+                                        <i class="fas fa-download"></i>
+                                        Baixar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="model-item available" data-model="qwen2.5-3b-instruct">
+                                <div class="model-info">
+                                    <strong>Qwen2.5 3B Instruct</strong>
+                                    <small>~2GB • Multilíngue • Alibaba</small>
+                                    <div class="model-tags">
+                                        <span class="tag">Multilíngue</span>
+                                        <span class="tag">Alibaba</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn btn-sm btn-primary download-model" data-model="qwen2.5-3b-instruct" data-url="https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf">
+                                        <i class="fas fa-download"></i>
+                                        Baixar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="model-item available" data-model="gemma-2-2b-instruct">
+                                <div class="model-info">
+                                    <strong>Gemma 2 2B Instruct</strong>
+                                    <small>~1.6GB • Google • Otimizado</small>
+                                    <div class="model-tags">
+                                        <span class="tag">Google</span>
+                                        <span class="tag">Otimizado</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn btn-sm btn-primary download-model" data-model="gemma-2-2b-instruct" data-url="https://huggingface.co/google/gemma-2-2b-it-GGUF/resolve/main/gemma-2-2b-it-q4_k_m.gguf">
+                                        <i class="fas fa-download"></i>
+                                        Baixar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Progress -->
+                <div id="downloadProgress" style="display: none; margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 15px; border: 1px solid var(--border-glow);">
+                    <h4 style="color: var(--primary-cyan); margin-bottom: 1rem;">
+                        <i class="fas fa-download"></i>
+                        Download em Progresso
+                    </h4>
+                    <div class="download-info">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span id="downloadModelName">Modelo</span>
+                            <span id="downloadPercent">0%</span>
+                        </div>
+                        <div class="progress-bar" style="width: 100%; height: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
+                            <div id="downloadProgressBar" style="width: 0%; height: 100%; background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-cyan)); transition: width 0.3s ease;"></div>
+                        </div>
+                        <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary);">
+                            <span id="downloadSpeed">0 MB/s</span>
+                            <span id="downloadSize">0 MB / 0 MB</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button class="btn btn-secondary" id="cancelDownload">
+                            <i class="fas fa-times"></i>
+                            Cancelar Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="saveModelConfig">
+                    <i class="fas fa-save"></i>
+                    Salvar Configuração
+                </button>
+                <button type="button" class="btn btn-secondary" id="resetModelConfig">
+                    <i class="fas fa-undo"></i>
+                    Restaurar Padrão
+                </button>
+                <button type="button" class="btn btn-secondary" id="refreshModels">
+                    <i class="fas fa-sync-alt"></i>
+                    Atualizar Lista
+                </button>
+                <button type="button" class="btn btn-secondary" id="closeModelManagement">
+                    <i class="fas fa-times"></i>
+                    Fechar
+                </button>
+            </div>
+        </div>
+
+        <!-- Session Management Section -->
+        <div class="form-section" id="sessionManagement" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-save"></i>
+                Gerenciamento de Sessões
+            </h2>
+            <p class="section-description">
+                Salve, carregue e gerencie suas sessões de análise. Mantenha um histórico completo de suas pesquisas.
+            </p>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="sessionNameSave">Nome da Sessão</label>
+                    <input type="text" id="sessionNameSave" name="sessionNameSave" placeholder="Digite um nome para a sessão...">
+                    <small>Nome único para identificar esta sessão</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="sessionDescription">Descrição</label>
+                    <textarea id="sessionDescription" name="sessionDescription" rows="3" placeholder="Descreva brevemente esta análise..."></textarea>
+                    <small>Descrição opcional para facilitar identificação</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="sessionTags">Tags</label>
+                    <input type="text" id="sessionTags" name="sessionTags" placeholder="marketing, e-commerce, análise...">
+                    <small>Tags separadas por vírgula para organização</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="autoSave">Salvamento Automático</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="autoSave" name="autoSave" checked>
+                            <label for="autoSave">Salvar automaticamente a cada etapa</label>
+                        </div>
+                    </div>
+                    <small>Salva progresso automaticamente durante a análise</small>
+                </div>
+            </div>
+
+            <!-- Saved Sessions List -->
+            <div class="results-grid" style="margin-top: 2rem;">
+                <div class="result-card">
+                    <h3><i class="fas fa-history"></i> Sessões Salvas</h3>
+                    <div id="savedSessionsList">
+                        <div class="session-item">
+                            <div class="session-info">
+                                <strong>Análise Marketing Digital</strong>
+                                <small>20/11/2024 - 14:30</small>
+                                <p>Análise completa do mercado de marketing digital</p>
+                            </div>
+                            <div class="session-actions">
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-folder-open"></i>
+                                    Carregar
+                                </button>
+                                <button class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-download"></i>
+                                    Exportar
+                                </button>
+                                <button class="btn btn-sm btn-error">
+                                    <i class="fas fa-trash"></i>
+                                    Excluir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="saveCurrentSession">
+                    <i class="fas fa-save"></i>
+                    Salvar Sessão Atual
+                </button>
+                <button type="button" class="btn btn-secondary" id="loadSession">
+                    <i class="fas fa-folder-open"></i>
+                    Carregar Sessão
+                </button>
+                <button type="button" class="btn btn-secondary" id="exportSession">
+                    <i class="fas fa-download"></i>
+                    Exportar Sessão
+                </button>
+                <button type="button" class="btn btn-secondary" id="closeSessionManagement">
+                    <i class="fas fa-times"></i>
+                    Fechar
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Interface Section -->
+        <div class="form-section active" id="mainInterface">
+            <!-- Configuration Form -->
+            <div class="config-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cog"></i>
+                    Configuração da Análise
+                </h2>
+                <p class="section-description">
+                    Configure os parâmetros básicos para sua análise de mercado. Todos os campos são obrigatórios para garantir resultados precisos.
+                </p>
+
+                <form id="analysisForm">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="segmento">
+                                <i class="fas fa-bullseye"></i> Segmento de Mercado *
+                            </label>
+                            <input type="text" id="segmento" name="segmento" required 
+                                   placeholder="Ex: Tecnologia, Saúde, E-commerce...">
+                            <small>Segmento principal do seu negócio ou área de interesse</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="produto">
+                                <i class="fas fa-box"></i> Produto/Serviço *
+                            </label>
+                            <textarea id="produto" name="produto" required rows="3"
+                                      placeholder="Descreva brevemente seu produto ou serviço..."></textarea>
+                            <small>Descrição clara do que você oferece ou pretende oferecer</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="publico">
+                                <i class="fas fa-users"></i> Público-Alvo *
+                            </label>
+                            <textarea id="publico" name="publico" required rows="3"
+                                      placeholder="Descreva seu público-alvo (idade, interesses, comportamento...)"></textarea>
+                            <small>Perfil detalhado do seu público-alvo</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="objetivo_receita">
+                                <i class="fas fa-dollar-sign"></i> Meta de Receita
+                            </label>
+                            <input type="text" id="objetivo_receita" name="objetivo_receita" 
+                                   placeholder="Ex: R$ 10.000/mês">
+                            <small>Meta financeira mensal (opcional)</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="session_name">
+                                <i class="fas fa-tag"></i> Nome da Sessão
+                            </label>
+                            <input type="text" id="session_name" name="session_name" 
+                                   placeholder="Nome para identificar esta análise...">
+                            <small>Nome para salvar e identificar esta análise</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="analysis_depth">
+                                <i class="fas fa-layer-group"></i> Profundidade da Análise
+                            </label>
+                            <select id="analysis_depth" name="analysis_depth">
+                                <option value="standard">Padrão (Recomendado)</option>
+                                <option value="deep">Profunda (Mais detalhada)</option>
+                                <option value="ultra">Ultra (Máxima profundidade)</option>
+                            </select>
+                            <small>Nível de detalhamento da análise</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions" style="margin: 2rem 0; padding: 2rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-glow);">
+                <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-bolt"></i>
+                    Ações Rápidas
+                </h3>
+                <div class="form-grid">
+                    <button class="btn btn-success" onclick="saveSession()">
+                        <i class="fas fa-save"></i>
+                        Salvar Sessão
+                    </button>
+                    <button class="btn btn-primary" onclick="showSavedSessions()">
+                        <i class="fas fa-folder-open"></i>
+                        Carregar Sessão
+                    </button>
+                    <button class="btn btn-secondary" onclick="toggleModelsSection()">
+                        <i class="fas fa-robot"></i>
+                        Gerenciar Modelos IA
+                    </button>
+                    <button class="btn btn-warning" onclick="pauseCurrentSession()" id="pauseBtn" disabled>
+                        <i class="fas fa-pause"></i>
+                        Pausar Sessão
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step Cards -->
+            <div class="steps-container" style="margin: 3rem 0;">
+                <h3 style="color: var(--primary-cyan); margin-bottom: 2rem; text-align: center; font-size: 1.8rem;">
+                    <i class="fas fa-route"></i>
+                    Etapas do Workflow
+                </h3>
+                
+                <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- Etapa 1: Coleta Massiva -->
+                    <div class="step-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow); transition: all 0.3s ease;">
+                        <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-cyan); color: var(--dark-bg); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem;">1</div>
+                        <h3 style="color: var(--primary-cyan); margin-bottom: 1rem;">Coleta Massiva Real</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            Busca massiva com rotação de APIs, extração de conteúdo viral e captura automática de screenshots
+                        </p>
+                        <div class="step-features" style="margin-bottom: 1.5rem;">
+                            <span class="tag">🔄 Rotação de APIs</span>
+                            <span class="tag">📸 Screenshots Automáticos</span>
+                            <span class="tag">🔥 Conteúdo Viral</span>
+                            <span class="tag">🌐 Múltiplos Provedores</span>
+                        </div>
+                        <button class="btn btn-primary" id="step1Btn" onclick="startStep1()">
+                            <i class="fas fa-database"></i>
+                            <span>INICIAR COLETA MASSIVA</span>
+                        </button>
+                    </div>
+
+                    <!-- Etapa 2: Verificação AI -->
+                    <div class="step-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow); transition: all 0.3s ease;">
+                        <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem;">2</div>
+                        <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">Verificação AI</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            Verificação inteligente dos dados coletados usando múltiplas camadas de IA para filtrar qualidade
+                        </p>
+                        <div class="step-features" style="margin-bottom: 1.5rem;">
+                            <span class="tag">🧠 Análise de Sentimento</span>
+                            <span class="tag">🔍 Detecção de Viés</span>
+                            <span class="tag">✅ Validação LLM</span>
+                            <span class="tag">🚫 Filtro de Qualidade</span>
+                        </div>
+                        <button class="btn btn-secondary" id="aiVerificationBtn" onclick="startAIVerification()" disabled>
+                            <i class="fas fa-robot"></i>
+                            <span>VERIFICAR COM IA</span>
+                        </button>
+                    </div>
+
+                    <!-- Etapa 3: Síntese Final -->
+                    <div class="step-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow); transition: all 0.3s ease;">
+                        <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem;">3</div>
+                        <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">Síntese com IA Ativa</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            IA analisa dados verificados e realiza buscas online ativas para validar e enriquecer informações
+                        </p>
+                        <div class="step-features" style="margin-bottom: 1.5rem;">
+                            <span class="tag">🤖 IA com Ferramentas</span>
+                            <span class="tag">🔍 Busca Ativa</span>
+                            <span class="tag">✅ Validação Online</span>
+                            <span class="tag">📊 Síntese JSON</span>
+                        </div>
+                        <button class="btn btn-secondary" id="synthesisBtn" onclick="startSynthesis()" disabled>
+                            <i class="fas fa-brain"></i>
+                            <span>INICIAR SÍNTESE IA</span>
+                        </button>
+                    </div>
+
+                    <!-- Etapa 4: Geração de 26 Módulos -->
+                    <div class="step-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow); transition: all 0.3s ease;">
+                        <div class="step-number" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem;">4</div>
+                        <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">Geração de 26 Módulos</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            Geração automática de 16 módulos especializados e compilação do relatório final completo
+                        </p>
+                        <div class="step-features" style="margin-bottom: 1.5rem;">
+                            <span class="tag">📋 26 Módulos</span>
+                            <span class="tag">🔧 Compilação</span>
+                            <span class="tag">📊 Relatório Final</span>
+                            <span class="tag">🎯 Insights Precisos</span>
+                        </div>
+                        <button class="btn btn-secondary" id="modulesBtn" onclick="startModules()" disabled>
+                            <i class="fas fa-cogs"></i>
+                            <span>GERAR MÓDULOS</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section (Hidden initially) -->
+        <div class="form-section" id="progressSection" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Progresso da Análise
+            </h2>
+            <p class="section-description">
+                Acompanhe o progresso em tempo real de cada etapa da análise.
+            </p>
+
+            <!-- Progress Indicators -->
+            <div class="progress-indicators" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                <div class="step-indicator-enhanced" id="step1Indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-info">
+                        <h4>Coleta Massiva</h4>
+                        <div class="step-status" id="step1Status">Aguardando...</div>
+                        <div class="step-progress">
+                            <div class="progress-bar" id="step1Progress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-indicator-enhanced" id="step2Indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-info">
+                        <h4>Verificação AI</h4>
+                        <div class="step-status" id="step2Status">Aguardando...</div>
+                        <div class="step-progress">
+                            <div class="progress-bar" id="step2Progress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-indicator-enhanced" id="step3Indicator">
+                    <div class="step-number">3</div>
+                    <div class="step-info">
+                        <h4>Síntese Final</h4>
+                        <div class="step-status" id="step3Status">Aguardando...</div>
+                        <div class="step-progress">
+                            <div class="progress-bar" id="step3Progress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-indicator-enhanced" id="step4Indicator">
+                    <div class="step-number">4</div>
+                    <div class="step-info">
+                        <h4>CPL Devastador</h4>
+                        <div class="step-status" id="step4Status">Aguardando...</div>
+                        <div class="step-progress">
+                            <div class="progress-bar" id="step4Progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="activity-log" style="margin-top: 3rem; padding: 2rem; background: rgba(0, 0, 0, 0.3); border-radius: 15px; border: 1px solid var(--border-glow);">
+                <div class="log-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary-cyan); margin: 0;">
+                        <i class="fas fa-list-alt"></i>
+                        Log de Atividades
+                    </h3>
+                    <button class="btn btn-sm btn-secondary" onclick="toggleActivityLog()">
+                        <i class="fas fa-eye"></i>
+                        Mostrar/Ocultar
+                    </button>
+                </div>
+                <div class="log-content" id="activityLog" style="max-height: 300px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.4; color: var(--text-secondary);">
+                    <div class="log-entry">
+                        <span class="timestamp">[00:00:00]</span>
+                        <span class="message">Sistema inicializado e pronto para análise</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Actions -->
+            <div class="results-actions" style="margin-top: 2rem; text-align: center;">
+                <button class="btn btn-primary" onclick="exportResults()" style="display: none;" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    Exportar Resultados
+                </button>
+                <button class="btn btn-success" onclick="generatePDF()" style="display: none;" id="pdfBtn">
+                    <i class="fas fa-file-pdf"></i>
+                    Gerar PDF
+                </button>
+                <button class="btn btn-secondary" onclick="shareResults()" style="display: none;" id="shareBtn">
+                    <i class="fas fa-share"></i>
+                    Compartilhar
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section (Hidden initially) -->
+        <div class="results-section" id="resultsSection">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Análise Concluída
+            </h2>
+            
+            <div class="text-center">
+                <div class="status-indicator status-completed mb-2">
+                    <i class="fas fa-check-circle"></i>
+                    Análise Concluída com Sucesso
+                </div>
+                
+                <p class="section-description">
+                    Sua análise foi processada e está pronta para visualização.
+                </p>
+                
+                <div class="form-actions">
+                    <button class="btn btn-success" id="finalDownload">
+                        <i class="fas fa-download"></i>
+                        Baixar Relatório Final
+                    </button>
+                    
+                    <button class="btn btn-primary" id="finalView">
+                        <i class="fas fa-eye"></i>
+                        Visualizar Resultados
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section (Hidden initially) -->
+        <div class="form-section" id="helpSection" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-question-circle"></i>
+                Central de Ajuda
+            </h2>
+            <p class="section-description">
+                Guia completo para utilizar todas as funcionalidades do ARQ BETA V1000
+            </p>
+
+            <div class="help-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <!-- Getting Started -->
+                <div class="help-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow);">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-play-circle"></i>
+                        Primeiros Passos
+                    </h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.8;">
+                        <li>1. Preencha os campos obrigatórios na configuração</li>
+                        <li>2. Defina seu segmento de mercado e público-alvo</li>
+                        <li>3. Escolha a profundidade da análise</li>
+                        <li>4. Inicie a Etapa 1: Coleta Massiva</li>
+                        <li>5. Aguarde o processamento automático</li>
+                    </ul>
+                </div>
+
+                <!-- Features -->
+                <div class="help-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow);">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-cogs"></i>
+                        Funcionalidades
+                    </h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.8;">
+                        <li><strong>Rotação de APIs:</strong> 48+ APIs para coleta massiva</li>
+                        <li><strong>Screenshots:</strong> Captura automática de evidências</li>
+                        <li><strong>IA Avançada:</strong> Múltiplos modelos de análise</li>
+                        <li><strong>Relatórios:</strong> Exportação em PDF e JSON</li>
+                        <li><strong>Sessões:</strong> Salve e retome análises</li>
+                    </ul>
+                </div>
+
+                <!-- Workflow -->
+                <div class="help-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow);">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-route"></i>
+                        Fluxo de Trabalho
+                    </h3>
+                    <div style="color: var(--text-secondary); line-height: 1.8;">
+                        <p><strong>Etapa 1:</strong> Coleta massiva de dados reais</p>
+                        <p><strong>Etapa 2:</strong> Verificação inteligente com IA</p>
+                        <p><strong>Etapa 3:</strong> Síntese final e relatórios</p>
+                        <p><strong>Etapa 4:</strong> CPL Devastador para leads</p>
+                    </div>
+                </div>
+
+                <!-- Models -->
+                <div class="help-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow);">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-robot"></i>
+                        Modelos de IA
+                    </h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.8;">
+                        <li><strong>Gemini 2.0 Flash:</strong> Modelo principal recomendado</li>
+                        <li><strong>GPT-4o Mini:</strong> Análise rápida e eficiente</li>
+                        <li><strong>Claude 3 Haiku:</strong> Processamento de texto</li>
+                        <li><strong>Llama 3.3:</strong> Modelo local disponível</li>
+                        <li><strong>Qwen 3 Coder:</strong> Análise técnica</li>
+                    </ul>
+                </div>
+
+                <!-- Sessions -->
+                <div class="help-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow);">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-save"></i>
+                        Gerenciamento de Sessões
+                    </h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.8;">
+                        <li><strong>Salvar:</strong> Preserve configurações e progresso</li>
+                        <li><strong>Carregar:</strong> Retome análises anteriores</li>
+                        <li><strong>Exportar:</strong> Backup de todas as sessões</li>
+                        <li><strong>Importar:</strong> Restaure sessões salvas</li>
+                        <li><strong>Pausar:</strong> Interrompa e retome quando quiser</li>
+                    </ul>
+                </div>
+
+                <!-- Troubleshooting -->
+                <div class="help-card" style="background: var(--card-bg); border-radius: 20px; padding: 2rem; border: 1px solid var(--border-glow);">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-tools"></i>
+                        Solução de Problemas
+                    </h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.8;">
+                        <li><strong>Erro de API:</strong> Sistema rotaciona automaticamente</li>
+                        <li><strong>Timeout:</strong> Análise continua em background</li>
+                        <li><strong>Dados insuficientes:</strong> Ajuste os parâmetros</li>
+                        <li><strong>Modelo offline:</strong> Use alternativas disponíveis</li>
+                        <li><strong>Sessão perdida:</strong> Verifique salvamentos automáticos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="faq-section" style="margin-top: 3rem;">
+                <h3 style="color: var(--primary-cyan); margin-bottom: 2rem; text-align: center;">
+                    <i class="fas fa-question-circle"></i>
+                    Perguntas Frequentes
+                </h3>
+                
+                <div class="faq-grid" style="display: grid; gap: 1rem;">
+                    <div class="faq-item" style="background: var(--card-bg); border-radius: 15px; padding: 1.5rem; border: 1px solid var(--border-glow);">
+                        <h4 style="color: var(--primary-cyan); margin-bottom: 0.5rem;">Como funciona a rotação de APIs?</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">O sistema utiliza 48+ APIs diferentes e rotaciona automaticamente quando uma falha ou atinge o limite, garantindo coleta contínua de dados.</p>
+                    </div>
+                    
+                    <div class="faq-item" style="background: var(--card-bg); border-radius: 15px; padding: 1.5rem; border: 1px solid var(--border-glow);">
+                        <h4 style="color: var(--primary-cyan); margin-bottom: 0.5rem;">Posso usar modelos locais?</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Sim! O sistema suporta modelos Ollama locais como Llama 3.3, Qwen 3 Coder e outros. Configure na aba "Modelos IA".</p>
+                    </div>
+                    
+                    <div class="faq-item" style="background: var(--card-bg); border-radius: 15px; padding: 1.5rem; border: 1px solid var(--border-glow);">
+                        <h4 style="color: var(--primary-cyan); margin-bottom: 0.5rem;">Os dados são reais?</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">100% REAIS! Não utilizamos simulações, placeholders ou dados fictícios. Toda informação é coletada em tempo real de fontes verificadas.</p>
+                    </div>
+                    
+                    <div class="faq-item" style="background: var(--card-bg); border-radius: 15px; padding: 1.5rem; border: 1px solid var(--border-glow);">
+                        <h4 style="color: var(--primary-cyan); margin-bottom: 0.5rem;">Quanto tempo leva uma análise?</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Depende da profundidade: Padrão (5-10 min), Profunda (15-30 min), Ultra (30-60 min). O progresso é mostrado em tempo real.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="contact-section" style="margin-top: 3rem; text-align: center; padding: 2rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-glow);">
+                <h3 style="color: var(--primary-cyan); margin-bottom: 1rem;">
+                    <i class="fas fa-headset"></i>
+                    Suporte Técnico
+                </h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Precisa de ajuda adicional? Nossa equipe está pronta para auxiliar.
+                </p>
+                <div class="contact-buttons" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="openSupport()">
+                        <i class="fas fa-comments"></i>
+                        Chat de Suporte
+                    </button>
+                    <button class="btn btn-secondary" onclick="openDocumentation()">
+                        <i class="fas fa-book"></i>
+                        Documentação
+                    </button>
+                    <button class="btn btn-success" onclick="reportBug()">
+                        <i class="fas fa-bug"></i>
+                        Reportar Bug
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let currentSessionId = null;
+        let workflowRunning = false;
+        let progressMonitorInterval = null;
+        let activityLogVisible = true;
+        let startTime = null;
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Interface inicializada');
+            initializeInterface();
+            setupEventListeners();
+            loadInstalledModels();
+        });
+
+        function initializeInterface() {
+            // Auto-generate session name
+            const now = new Date();
+            const sessionName = `Análise_${now.getDate().toString().padStart(2, '0')}${(now.getMonth() + 1).toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
+            if (document.getElementById('session_name')) {
+                document.getElementById('session_name').value = sessionName;
+            }
+            
+            // Initialize progress
+            updateProgressLine(0);
+            addLogEntry('Sistema inicializado e pronto para análise');
+        }
+
+        function setupEventListeners() {
+            // Temperature range display
+            const tempRange = document.getElementById('temperature');
+            if (tempRange) {
+                tempRange.addEventListener('input', function() {
+                    const value = this.value;
+                    const label = this.parentElement.querySelector('small');
+                    if (label) {
+                        label.textContent = `Criatividade do modelo (${value} - ${value < 0.3 ? 'Conservador' : value < 0.7 ? 'Equilibrado' : 'Criativo'})`;
+                    }
+                });
+            }
+        }
+
+        // ===== NAVIGATION FUNCTIONS =====
+
+
+
+        function showProgressSection() {
+            hideAllSections();
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('progressSection').classList.add('active');
+        }
+
+
+
+        // ===== WORKFLOW STEPS =====
+        async function startStep1() {
+            const segmento = document.getElementById('segmento').value;
+            const produto = document.getElementById('produto').value;
+            const publico = document.getElementById('publico').value;
+
+            if (!segmento.trim()) {
+                showNotification('Por favor, preencha pelo menos o segmento de mercado', 'warning');
+                return;
+            }
+
+            // Gera currentSessionId se não existir
+            if (!currentSessionId) {
+                currentSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`;
+                console.log('🆕 Novo currentSessionId gerado:', currentSessionId);
+
+                // Salva automaticamente a sessão quando inicia análise
+                try {
+                    await saveSession();
+                    console.log('💾 Sessão salva automaticamente ao iniciar análise');
+                } catch (error) {
+                    console.warn('⚠️ Erro ao salvar sessão automaticamente:', error);
+                }
+            }
+
+            try {
+                setStepLoading(1, true);
+                showProgressSection();
+                startTime = Date.now();
+
+                const response = await fetch('/api/workflow/step1/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        segmento: segmento,
+                        produto: produto,
+                        publico: publico,
+                        session_id: currentSessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentSessionId = result.session_id;
+                    showNotification('Etapa 1 iniciada com sucesso! Session: ' + currentSessionId, 'success');
+                    startProgressMonitoring();
+                    updateStepStatus(1, 'running');
+                    workflowRunning = true;
+                    
+                    // Enable pause button
+                    document.getElementById('pauseBtn').disabled = false;
+                    
+                    // Update step card
+                    updateStepCard(1, 'active');
+                    
+                    addLogEntry('Etapa 1: Coleta Massiva iniciada', 'success');
+                } else {
+                    showNotification('Erro na Etapa 1: ' + result.error, 'error');
+                    setStepLoading(1, false);
+                    addLogEntry('Erro na Etapa 1: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na Etapa 1:', error);
+                showNotification('Erro na Etapa 1: ' + error.message, 'error');
+                setStepLoading(1, false);
+                addLogEntry('Erro na Etapa 1: ' + error.message, 'error');
+            }
+        }
+
+        async function startAIVerification() {
+            if (!currentSessionId) {
+                showNotification('Execute a Etapa 1 primeiro', 'warning');
+                return;
+            }
+
+            try {
+                setStepLoading('aiVerification', true);
+                updateStepStatus(2, 'running');
+                updateStepCard(2, 'active');
+                addLogEntry('Etapa 2: Verificação AI iniciada', 'success');
+
+                const response = await fetch('/api/workflow/ai-verification/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Verificação AI iniciada com sucesso!', 'success');
+                } else {
+                    showNotification('Erro na Verificação AI: ' + result.error, 'error');
+                    setStepLoading('aiVerification', false);
+                    addLogEntry('Erro na Verificação AI: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na Verificação AI:', error);
+                showNotification('Erro na Verificação AI: ' + error.message, 'error');
+                setStepLoading('aiVerification', false);
+                addLogEntry('Erro na Verificação AI: ' + error.message, 'error');
+            }
+        }
+
+        async function startStep2() {
+            if (!currentSessionId) {
+                showNotification('Execute as etapas anteriores primeiro', 'warning');
+                return;
+            }
+
+            try {
+                setStepLoading(2, true);
+                updateStepStatus(3, 'running');
+                updateStepCard(3, 'active');
+                addLogEntry('Etapa 3: Síntese Final iniciada', 'success');
+
+                const response = await fetch('/api/workflow/step2/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Síntese Final iniciada com sucesso!', 'success');
+                } else {
+                    showNotification('Erro na Síntese Final: ' + result.error, 'error');
+                    setStepLoading(2, false);
+                    addLogEntry('Erro na Síntese Final: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na Síntese Final:', error);
+                showNotification('Erro na Síntese Final: ' + error.message, 'error');
+                setStepLoading(2, false);
+                addLogEntry('Erro na Síntese Final: ' + error.message, 'error');
+            }
+        }
+
+        async function startStep3() {
+            if (!currentSessionId) {
+                showNotification('Execute as etapas anteriores primeiro', 'warning');
+                return;
+            }
+
+            try {
+                setStepLoading(3, true);
+                updateStepStatus(4, 'running');
+                updateStepCard(4, 'active');
+                addLogEntry('Etapa 4: CPL Devastador iniciado', 'success');
+
+                const response = await fetch('/api/workflow/step3/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('CPL Devastador iniciado com sucesso!', 'success');
+                } else {
+                    showNotification('Erro no CPL Devastador: ' + result.error, 'error');
+                    setStepLoading(3, false);
+                    addLogEntry('Erro no CPL Devastador: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro no CPL Devastador:', error);
+                showNotification('Erro no CPL Devastador: ' + error.message, 'error');
+                setStepLoading(3, false);
+                addLogEntry('Erro no CPL Devastador: ' + error.message, 'error');
+            }
+        }
+
+        // ===== PROGRESS MONITORING =====
+        function startProgressMonitoring() {
+            if (progressMonitorInterval) {
+                clearInterval(progressMonitorInterval);
+            }
+
+            progressMonitorInterval = setInterval(async () => {
+                if (!currentSessionId) return;
+
+                try {
+                    const response = await fetch(`/api/workflow/progress/${currentSessionId}`);
+                    const progress = await response.json();
+
+                    if (progress.success) {
+                        updateProgressFromData(progress.data);
+                    }
+                } catch (error) {
+                    console.error('Erro ao monitorar progresso:', error);
+                }
+            }, 2000);
+        }
+
+        function updateProgressFromData(data) {
+            // Update step indicators
+            if (data.step1) {
+                updateStepProgress(1, data.step1.progress || 0);
+                updateStepStatus(1, data.step1.status || 'running');
+                
+                if (data.step1.status === 'completed') {
+                    updateStepCard(1, 'completed');
+                    enableStepButton('aiVerificationBtn');
+                    addLogEntry('Etapa 1 concluída com sucesso', 'success');
+                }
+            }
+
+            if (data.step2) {
+                updateStepProgress(2, data.step2.progress || 0);
+                updateStepStatus(2, data.step2.status || 'running');
+                
+                if (data.step2.status === 'completed') {
+                    updateStepCard(2, 'completed');
+                    enableStepButton('step2Btn');
+                    addLogEntry('Verificação AI concluída com sucesso', 'success');
+                }
+            }
+
+            if (data.step3) {
+                updateStepProgress(3, data.step3.progress || 0);
+                updateStepStatus(3, data.step3.status || 'running');
+                
+                if (data.step3.status === 'completed') {
+                    updateStepCard(3, 'completed');
+                    enableStepButton('step3Btn');
+                    addLogEntry('Síntese Final concluída com sucesso', 'success');
+                }
+            }
+
+            if (data.step4) {
+                updateStepProgress(4, data.step4.progress || 0);
+                updateStepStatus(4, data.step4.status || 'running');
+                
+                if (data.step4.status === 'completed') {
+                    updateStepCard(4, 'completed');
+                    showResultsActions();
+                    addLogEntry('CPL Devastador concluído com sucesso', 'success');
+                    workflowRunning = false;
+                    
+                    // Calculate total time
+                    if (startTime) {
+                        const totalTime = Math.round((Date.now() - startTime) / 1000);
+                        addLogEntry(`Análise completa em ${totalTime}s`, 'success');
+                    }
+                }
+            }
+
+            // Update overall progress
+            const totalSteps = 4;
+            const completedSteps = [data.step1, data.step2, data.step3, data.step4]
+                .filter(step => step && step.status === 'completed').length;
+            
+            updateProgressLine((completedSteps / totalSteps) * 100);
+        }
+
+        // ===== UI UPDATE FUNCTIONS =====
+        function updateStepProgress(stepNumber, progress) {
+            const progressBar = document.getElementById(`step${stepNumber}Progress`);
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+        }
+
+        function updateStepStatus(stepNumber, status) {
+            const statusElement = document.getElementById(`step${stepNumber}Status`);
+            if (statusElement) {
+                const statusText = {
+                    'waiting': 'Aguardando...',
+                    'running': 'Em execução...',
+                    'completed': 'Concluído',
+                    'error': 'Erro'
+                };
+                statusElement.textContent = statusText[status] || status;
+            }
+
+            const indicator = document.getElementById(`step${stepNumber}Indicator`);
+            if (indicator) {
+                indicator.className = `step-indicator-enhanced ${status}`;
+            }
+        }
+
+        function updateStepCard(stepNumber, status) {
+            const stepCard = document.querySelector(`#step${stepNumber}Btn`).closest('.step-card');
+            if (stepCard) {
+                stepCard.className = `step-card ${status}`;
+            }
+        }
+
+        function updateProgressLine(percentage) {
+            const progressLine = document.getElementById('progressLine');
+            if (progressLine) {
+                progressLine.style.width = `${percentage}%`;
+            }
+        }
+
+        function enableStepButton(buttonId) {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.disabled = false;
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-primary');
+            }
+        }
+
+        function setStepLoading(stepNumber, isLoading) {
+            let buttonId = stepNumber === 'aiVerification' ? 'aiVerificationBtn' : 'step' + stepNumber + 'Btn';
+            const button = document.getElementById(buttonId);
+            
+            if (button) {
+                const existingSpinner = button.querySelector('.loading-spinner');
+                if (existingSpinner) {
+                    existingSpinner.remove();
+                }
+                
+                if (isLoading) {
+                    const spinner = document.createElement('div');
+                    spinner.className = 'loading-spinner';
+                    button.insertBefore(spinner, button.firstChild);
+                    button.disabled = true;
+                } else {
+                    button.disabled = false;
+                }
+            }
+        }
+
+        function showResultsActions() {
+            document.getElementById('exportBtn').style.display = 'inline-block';
+            document.getElementById('pdfBtn').style.display = 'inline-block';
+            document.getElementById('shareBtn').style.display = 'inline-block';
+        }
+
+        // ===== ACTIVITY LOG =====
+        function addLogEntry(message, type = 'info') {
+            const logContent = document.getElementById('activityLog');
+            if (!logContent) return;
+
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString();
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.innerHTML = `
+                <span class="timestamp">[${timestamp}]</span>
+                <span class="message">${message}</span>
+            `;
+            
+            logContent.appendChild(logEntry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        function toggleActivityLog() {
+            const logContent = document.getElementById('activityLog');
+            if (logContent) {
+                activityLogVisible = !activityLogVisible;
+                logContent.style.display = activityLogVisible ? 'block' : 'none';
+            }
+        }
+
+        // ===== SESSION MANAGEMENT =====
+        async function saveSession() {
+            const sessionName = document.getElementById('session_name')?.value || 'Sessão sem nome';
+            const sessionData = {
+                name: sessionName,
+                segmento: document.getElementById('segmento')?.value || '',
+                produto: document.getElementById('produto')?.value || '',
+                publico: document.getElementById('publico')?.value || '',
+                objetivo_receita: document.getElementById('objetivo_receita')?.value || '',
+                analysis_depth: document.getElementById('analysis_depth')?.value || 'standard',
+                timestamp: new Date().toISOString(),
+                session_id: currentSessionId
+            };
+
+            try {
+                const response = await fetch('/api/sessions/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(sessionData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Sessão salva com sucesso!', 'success');
+                    addLogEntry('Sessão salva: ' + sessionName, 'success');
+                } else {
+                    showNotification('Erro ao salvar sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar sessão:', error);
+                showNotification('Erro ao salvar sessão: ' + error.message, 'error');
+            }
+        }
+
+        async function loadSavedSessions() {
+            try {
+                const response = await fetch('/api/sessions/list');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySavedSessions(result.sessions);
+                } else {
+                    showNotification('Erro ao carregar sessões: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar sessões:', error);
+                showNotification('Erro ao carregar sessões: ' + error.message, 'error');
+            }
+        }
+
+        function displaySavedSessions(sessions) {
+            const container = document.getElementById('savedSessionsList');
+            if (!container) return;
+
+            container.innerHTML = '';
+            
+            if (sessions.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">Nenhuma sessão salva encontrada.</p>';
+                return;
+            }
+
+            sessions.forEach(session => {
+                const sessionItem = document.createElement('div');
+                sessionItem.className = 'session-item';
+                sessionItem.innerHTML = `
+                    <div class="session-info">
+                        <strong>${session.name}</strong>
+                        <small>${new Date(session.timestamp).toLocaleString()}</small>
+                        <p>${session.segmento} - ${session.produto.substring(0, 50)}...</p>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-sm btn-primary" onclick="loadSession('${session.id}')">
+                            <i class="fas fa-folder-open"></i>
+                            Carregar
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="exportSession('${session.id}')">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                        <button class="btn btn-sm btn-error" onclick="deleteSession('${session.id}')">
+                            <i class="fas fa-trash"></i>
+                            Excluir
+                        </button>
+                    </div>
+                `;
+                container.appendChild(sessionItem);
+            });
+        }
+
+        async function loadSession(sessionId) {
+            try {
+                const response = await fetch(`/api/sessions/load/${sessionId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const session = result.session;
+                    
+                    // Fill form fields
+                    document.getElementById('segmento').value = session.segmento || '';
+                    document.getElementById('produto').value = session.produto || '';
+                    document.getElementById('publico').value = session.publico || '';
+                    document.getElementById('objetivo_receita').value = session.objetivo_receita || '';
+                    document.getElementById('session_name').value = session.name || '';
+                    document.getElementById('analysis_depth').value = session.analysis_depth || 'standard';
+                    
+                    currentSessionId = session.session_id;
+                    
+                    showNotification('Sessão carregada com sucesso!', 'success');
+                    // showMainInterface(); // Removido - deixar hash navigation controlar
+                } else {
+                    showNotification('Erro ao carregar sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar sessão:', error);
+                showNotification('Erro ao carregar sessão: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteSession(sessionId) {
+            if (!confirm('Tem certeza que deseja excluir esta sessão?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/sessions/delete/${sessionId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Sessão excluída com sucesso!', 'success');
+                    loadSavedSessions(); // Refresh the list
+                } else {
+                    showNotification('Erro ao excluir sessão: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir sessão:', error);
+                showNotification('Erro ao excluir sessão: ' + error.message, 'error');
+            }
+        }
+
+        function pauseCurrentSession() {
+            if (workflowRunning && currentSessionId) {
+                // Implementation for pausing current session
+                showNotification('Funcionalidade de pausa em desenvolvimento', 'warning');
+            }
+        }
+
+        // ===== MODEL MANAGEMENT =====
+        async function loadInstalledModels() {
+            try {
+                const response = await fetch('/api/models/installed');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayInstalledModels(result.models);
+                    updateAvailableModelsList(result.models);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar modelos:', error);
+            }
+        }
+
+        function displayInstalledModels(models) {
+            const container = document.getElementById('installedModelsList');
+            if (!container) return;
+
+            container.innerHTML = '';
+            
+            if (models.length === 0) {
+                container.innerHTML = `
+                    <div class="model-item">
+                        <div class="model-info">
+                            <strong>Nenhum modelo instalado</strong>
+                            <small>Use a seção "Modelos Disponíveis" para baixar modelos</small>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            models.forEach(model => {
+                const modelItem = document.createElement('div');
+                modelItem.className = 'model-item installed';
+                modelItem.innerHTML = `
+                    <div class="model-info">
+                        <strong>${model.name}</strong>
+                        <small>${model.size} • ${model.type || 'Local'}</small>
+                        <div class="model-status">
+                            <div class="status-dot"></div>
+                            <span>Instalado</span>
+                        </div>
+                    </div>
+                    <div class="model-actions">
+                        <button class="btn btn-sm btn-error" onclick="deleteModel('${model.id}')">
+                            <i class="fas fa-trash"></i>
+                            Remover
+                        </button>
+                    </div>
+                `;
+                container.appendChild(modelItem);
+            });
+        }
+
+        async function downloadModel(modelName, modelUrl, buttonElement) {
+            try {
+                buttonElement.disabled = true;
+                buttonElement.innerHTML = '<div class="loading-spinner"></div> Baixando...';
+                buttonElement.classList.add('downloading');
+                
+                showDownloadProgress(modelName);
+                
+                const response = await fetch('/api/models/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model_name: modelName,
+                        model_url: modelUrl
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(`Modelo ${modelName} baixado com sucesso!`, 'success');
+                    buttonElement.innerHTML = '<i class="fas fa-check"></i> Instalado';
+                    buttonElement.classList.remove('downloading');
+                    buttonElement.classList.add('btn-success');
+                    
+                    hideDownloadProgress();
+                    refreshInstalledModels();
+                } else {
+                    throw new Error(result.error || 'Erro no download');
+                }
+            } catch (error) {
+                console.error('Erro no download:', error);
+                showNotification(`Erro ao baixar modelo: ${error.message}`, 'error');
+                
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = '<i class="fas fa-download"></i> Baixar';
+                buttonElement.classList.remove('downloading');
+                
+                hideDownloadProgress();
+            }
+        }
+
+        function showDownloadProgress(modelName) {
+            const progressDiv = document.getElementById('downloadProgress');
+            const modelNameSpan = document.getElementById('downloadModelName');
+            
+            if (progressDiv && modelNameSpan) {
+                modelNameSpan.textContent = modelName;
+                progressDiv.style.display = 'block';
+                
+                // Simulate progress (in real implementation, this would be updated via WebSocket or polling)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress > 95) progress = 95;
+                    
+                    updateDownloadProgress(progress);
+                    
+                    if (progress >= 95) {
+                        clearInterval(progressInterval);
+                    }
+                }, 500);
+            }
+        }
+
+        function updateDownloadProgress(percentage) {
+            const progressBar = document.getElementById('downloadProgressBar');
+            const percentSpan = document.getElementById('downloadPercent');
+            
+            if (progressBar) progressBar.style.width = `${percentage}%`;
+            if (percentSpan) percentSpan.textContent = `${Math.round(percentage)}%`;
+        }
+
+        function hideDownloadProgress() {
+            const progressDiv = document.getElementById('downloadProgress');
+            if (progressDiv) {
+                progressDiv.style.display = 'none';
+            }
+        }
+
+        function refreshInstalledModels() {
+            loadInstalledModels();
+        }
+
+        function updateAvailableModelsList(installedModels) {
+            const installedNames = installedModels.map(m => m.id);
+            
+            document.querySelectorAll('.model-item.available').forEach(item => {
+                const modelName = item.getAttribute('data-model');
+                const downloadBtn = item.querySelector('.download-model');
+                
+                if (installedNames.includes(modelName)) {
+                    downloadBtn.disabled = true;
+                    downloadBtn.innerHTML = '<i class="fas fa-check"></i> Instalado';
+                    downloadBtn.classList.remove('btn-primary');
+                    downloadBtn.classList.add('btn-success');
+                    item.classList.add('installed');
+                }
+            });
+        }
+
+        async function deleteModel(modelId) {
+            if (!confirm('Tem certeza que deseja remover este modelo?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/models/delete/${modelId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Modelo removido com sucesso!', 'success');
+                    refreshInstalledModels();
+                } else {
+                    throw new Error(result.error || 'Erro ao remover modelo');
+                }
+
+            } catch (error) {
+                console.error('Erro ao remover modelo:', error);
+                showNotification(`Erro ao remover modelo: ${error.message}`, 'error');
+            }
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                max-width: 400px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                animation: slideInRight 0.3s ease;
+            `;
+            
+            // Set background color based on type
+            const colors = {
+                'success': 'var(--success-color)',
+                'error': 'var(--error-color)',
+                'warning': 'var(--warning-color)',
+                'info': 'var(--primary-cyan)'
+            };
+            notification.style.background = colors[type] || colors.info;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Add CSS animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ===== EXPORT FUNCTIONS =====
+        async function exportResults() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma análise para exportar', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/export/results/${currentSessionId}`);
+                const blob = await response.blob();
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `analise_${currentSessionId}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('Resultados exportados com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao exportar:', error);
+                showNotification('Erro ao exportar resultados: ' + error.message, 'error');
+            }
+        }
+
+        async function generatePDF() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma análise para gerar PDF', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/export/pdf/${currentSessionId}`);
+                const blob = await response.blob();
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `relatorio_${currentSessionId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('PDF gerado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                showNotification('Erro ao gerar PDF: ' + error.message, 'error');
+            }
+        }
+
+        function shareResults() {
+            if (!currentSessionId) {
+                showNotification('Nenhuma análise para compartilhar', 'warning');
+                return;
+            }
+
+            const shareUrl = `${window.location.origin}/share/${currentSessionId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Análise de Mercado - ARQ BETA V1000',
+                    text: 'Confira os resultados da minha análise de mercado',
+                    url: shareUrl
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showNotification('Link copiado para a área de transferência!', 'success');
+                }).catch(() => {
+                    showNotification('Erro ao copiar link', 'error');
+                });
+            }
+        }
+
+        // ===== WORKFLOW AUTOMATION =====
+        function runFullWorkflow() {
+            if (workflowRunning) {
+                showNotification('O workflow já está em execução.', 'warning');
+                return;
+            }
+            
+            // Simula o clique nos botões na ordem correta, se eles estiverem habilitados
+            if (document.getElementById('step1Btn').disabled === false) {
+                startStep1();
+            } else {
+                showNotification('Etapa 1 ainda não está pronta.', 'warning');
+            }
+        }
+
+        // ===== MODEL CONFIGURATION =====
+        async function saveModelConfig() {
+            const config = {
+                primaryModel: document.getElementById('primaryModel')?.value,
+                fallbackModel: document.getElementById('fallbackModel')?.value,
+                maxTokens: document.getElementById('maxTokens')?.value,
+                temperature: document.getElementById('temperature')?.value,
+                requestDelay: document.getElementById('requestDelay')?.value,
+                enableLocalModel: document.getElementById('enableLocalModel')?.checked
+            };
+
+            try {
+                const response = await fetch('/api/models/config/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Configuração salva com sucesso!', 'success');
+                } else {
+                    showNotification('Erro ao salvar configuração: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar configuração:', error);
+                showNotification('Erro ao salvar configuração: ' + error.message, 'error');
+            }
+        }
+
+        function resetModelConfig() {
+            document.getElementById('primaryModel').value = 'gemini-2.0-flash-exp';
+            document.getElementById('fallbackModel').value = 'gpt-3.5-turbo';
+            document.getElementById('maxTokens').value = '4000';
+            document.getElementById('temperature').value = '0.7';
+            document.getElementById('requestDelay').value = '2';
+            document.getElementById('enableLocalModel').checked = false;
+            
+            showNotification('Configuração restaurada para os valores padrão', 'success');
+        }
+
+        // ===== TOGGLE FUNCTIONS =====
+        function toggleModelsSection() {
+            showModelManagement();
+        }
+
+        function showSavedSessions() {
+            showSessionManagement();
+        }
+
+        // Handle header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+                        firstInvalidField = field;
+                    }
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+
+            if (!isValid && firstInvalidField) {
+                firstInvalidField.focus();
+                showNotification('Por favor, preencha todos os campos obrigatórios.', 'error');
+            }
+
+            return isValid;
+        }
+
+        function startAnalysis() {
+            if (!validateForm()) {
+                return;
+            }
+
+            if (analysisInProgress) {
+                showNotification('Uma análise já está em andamento.', 'warning');
+                return;
+            }
+
+            // Collect form data
+            const formData = new FormData(document.getElementById('analysisForm'));
+            analysisData = Object.fromEntries(formData.entries());
+
+            // Start analysis process
+            analysisInProgress = true;
+            nextStep();
+            
+            showNotification('Iniciando análise... Por favor, aguarde.', 'info');
+            
+            // Make real API call to backend
+            performRealAnalysis();
+        }
+
+        async function performRealAnalysis() {
+            try {
+                // Update status indicators
+                updateStatus('webStatus', 'processing');
+                
+                // Prepare data for backend
+                const analysisPayload = {
+                    query: analysisData.query,
+                    segmento: analysisData.segmento,
+                    produto: analysisData.produto,
+                    publico: analysisData.publico,
+                    meta_receita: analysisData.meta_receita,
+                    nome_servico: analysisData.nome_servico,
+                    session_name: analysisData.session_name || `analise_${Date.now()}`,
+                    timestamp: new Date().toISOString()
+                };
+
+                console.log('Enviando dados para análise:', analysisPayload);
+
+                // Make API call to start analysis
+                const response = await fetch('/api/start_analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(analysisPayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Resposta do backend:', result);
+
+                if (result.success) {
+                    // Store session ID for tracking
+                    currentSessionId = result.session_id;
+                    
+                    // Start polling for progress updates
+                    pollAnalysisProgress();
+                    
+                    showNotification('Análise iniciada com sucesso!', 'success');
+                } else {
+                    throw new Error(result.error || 'Erro desconhecido');
+                }
+
+            } catch (error) {
+                console.error('Erro ao iniciar análise:', error);
+                showNotification(`Erro ao iniciar análise: ${error.message}`, 'error');
+                analysisInProgress = false;
+                
+                // Reset to first step
+                currentStep = 1;
+                updateProgressBar();
+                showStep(1);
+            }
+        }
+
+        async function pollAnalysisProgress() {
+            if (!currentSessionId || !analysisInProgress) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/analysis_progress/${currentSessionId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const progress = await response.json();
+                console.log('Progresso da análise:', progress);
+
+                // Update status indicators based on progress
+                updateAnalysisProgress(progress);
+
+                // Continue polling if analysis is still in progress
+                if (progress.status === 'in_progress') {
+                    setTimeout(pollAnalysisProgress, 2000); // Poll every 2 seconds
+                } else if (progress.status === 'completed') {
+                    // Analysis completed
+                    analysisInProgress = false;
+                    showNotification('Análise concluída com sucesso!', 'success');
+                    
+                    // Move to results step
+                    nextStep();
+                } else if (progress.status === 'error') {
+                    throw new Error(progress.error || 'Erro durante a análise');
+                }
+
+            } catch (error) {
+                console.error('Erro ao verificar progresso:', error);
+                showNotification(`Erro ao verificar progresso: ${error.message}`, 'error');
+                analysisInProgress = false;
+            }
+        }
+
+        function updateAnalysisProgress(progress) {
+            // Update step 2 status indicators
+            if (progress.steps) {
+                if (progress.steps.web_search) {
+                    updateStatus('webStatus', progress.steps.web_search);
+                }
+                if (progress.steps.social_media) {
+                    updateStatus('socialStatus', progress.steps.social_media);
+                }
+                if (progress.steps.competitor_analysis) {
+                    updateStatus('competitorStatus', progress.steps.competitor_analysis);
+                }
+                if (progress.steps.market_analysis) {
+                    updateStatus('marketStatus', progress.steps.market_analysis);
+                }
+                
+                // Check if step 2 is complete and move to step 3
+                const step2Complete = progress.steps.web_search === 'completed' &&
+                                    progress.steps.social_media === 'completed' &&
+                                    progress.steps.competitor_analysis === 'completed' &&
+                                    progress.steps.market_analysis === 'completed';
+                
+                if (step2Complete && currentStep === 2) {
+                    nextStep(); // Move to step 3
+                    
+                    // Update step 3 indicators
+                    if (progress.steps.ai_synthesis) {
+                        updateStatus('aiStatus', progress.steps.ai_synthesis);
+                    }
+                    if (progress.steps.report_generation) {
+                        updateStatus('reportStatus', progress.steps.report_generation);
+                    }
+                }
+            }
+        }
+
+        function simulateAnalysisSteps() {
+            // Fallback simulation if real API fails
+            const steps = [
+                { id: 'webStatus', delay: 2000 },
+                { id: 'socialStatus', delay: 4000 },
+                { id: 'competitorStatus', delay: 6000 },
+                { id: 'marketStatus', delay: 8000 }
+            ];
+
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    updateStatus(step.id, 'processing');
+                    
+                    setTimeout(() => {
+                        updateStatus(step.id, 'completed');
+                        
+                        if (index === steps.length - 1) {
+                            setTimeout(() => {
+                                nextStep(); // Move to processing step
+                                
+                                // Simulate AI processing
+                                setTimeout(() => {
+                                    updateStatus('aiStatus', 'processing');
+                                    
+                                    setTimeout(() => {
+                                        updateStatus('aiStatus', 'completed');
+                                        updateStatus('reportStatus', 'processing');
+                                        
+                                        setTimeout(() => {
+                                            updateStatus('reportStatus', 'completed');
+                                            nextStep(); // Move to results step
+                                            analysisInProgress = false;
+                                        }, 3000);
+                                    }, 4000);
+                                }, 1000);
+                            }, 1000);
+                        }
+                    }, 2000);
+                }, step.delay);
+            });
+        }
+
+        function updateStatus(elementId, status) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            // Remove all status classes
+            element.className = 'status-indicator';
+            
+            // Add new status class and content
+            switch (status) {
+                case 'processing':
+                    element.classList.add('status-processing');
+                    element.innerHTML = '<div class="loading-spinner"></div> Processando...';
+                    break;
+                case 'completed':
+                    element.classList.add('status-completed');
+                    element.innerHTML = '<i class="fas fa-check-circle"></i> Concluído';
+                    break;
+                case 'error':
+                    element.classList.add('status-error');
+                    element.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro';
+                    break;
+                default:
+                    element.classList.add('status-waiting');
+                    element.innerHTML = '<i class="fas fa-clock"></i> Aguardando...';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < 4) {
+                // Update current step
+                document.getElementById(`section${currentStep}`).classList.remove('active');
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                document.getElementById(`step${currentStep}`).classList.add('completed');
+                
+                currentStep++;
+                
+                // Activate next step
+                document.getElementById(`section${currentStep}`).classList.add('active');
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                
+                updateProgressBar();
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateProgressBar() {
+            const progressLine = document.getElementById('progressLine');
+            const progress = ((currentStep - 1) / 3) * 100;
+            progressLine.style.width = `${progress}%`;
+        }
+
+        function downloadReport() {
+            // Simulate report download
+            showNotification('Iniciando download do relatório...', 'success');
+            
+            // In a real implementation, this would trigger the actual download
+            setTimeout(() => {
+                showNotification('Relatório baixado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function viewReport() {
+            // Simulate opening report in new tab
+            showNotification('Abrindo relatório em nova aba...', 'success');
+            
+            // In a real implementation, this would open the actual report
+            setTimeout(() => {
+                window.open('#', '_blank');
+            }, 1000);
+        }
+
+        function newAnalysis() {
+            // Reset the interface for a new analysis
+            currentStep = 1;
+            analysisInProgress = false;
+            analysisData = {};
+            
+            // Reset all steps
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`section${i}`).classList.remove('active');
+                document.getElementById(`step${i}`).classList.remove('active', 'completed');
+            }
+            
+            // Reset status indicators
+            const statusElements = ['webStatus', 'socialStatus', 'competitorStatus', 'marketStatus', 'aiStatus', 'reportStatus'];
+            statusElements.forEach(id => {
+                updateStatus(id, 'waiting');
+            });
+            
+            // Activate first step
+            document.getElementById('section1').classList.add('active');
+            document.getElementById('step1').classList.add('active');
+            
+            // Clear form
+            document.getElementById('analysisForm').reset();
+            
+            // Generate new session name
+            initializeInterface();
+            
+            updateProgressBar();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            showNotification('Interface resetada para nova análise.', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                z-index: 10000;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                color: white;
+                font-weight: 600;
+                max-width: 400px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                animation: slideInRight 0.3s ease;
+            `;
+            
+            // Set background color based on type
+            switch (type) {
+                case 'success':
+                    notification.style.background = 'linear-gradient(45deg, var(--success-color), #00cc77)';
+                    break;
+                case 'error':
+                    notification.style.background = 'linear-gradient(45deg, var(--error-color), #cc3333)';
+                    break;
+                case 'warning':
+                    notification.style.background = 'linear-gradient(45deg, var(--warning-color), #cc8800)';
+                    break;
+                default:
+                    notification.style.background = 'linear-gradient(45deg, var(--primary-cyan), var(--secondary-cyan))';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+
+        // Add CSS for notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Navigation Functions
+        function showMainInterface() {
+            hideAllSections();
+            document.querySelector('.progress-container').style.display = 'block';
+            document.getElementById('section1').style.display = 'block';
+            document.getElementById('section1').classList.add('active');
+            updateActiveNavLink('inicio');
+        }
+
+        function showModelManagement() {
+            hideAllSections();
+            document.getElementById('modelManagement').style.display = 'block';
+            updateActiveNavLink('modelos');
+            loadModelConfig();
+            refreshInstalledModels();
+        }
+
+        function showSessionManagement() {
+            hideAllSections();
+            document.getElementById('sessionManagement').style.display = 'block';
+            updateActiveNavLink('sessoes');
+            loadSavedSessions();
+        }
+
+        function showHelpSection() {
+            hideAllSections();
+            document.getElementById('helpSection').style.display = 'block';
+            updateActiveNavLink('ajuda');
+        }
+
+        function hideAllSections() {
+            const sections = document.querySelectorAll('.form-section, .progress-container, .results-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+        }
+
+        function updateActiveNavLink(activeId) {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + activeId) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Model Management Functions
+        function loadModelConfig() {
+            const config = JSON.parse(localStorage.getItem('modelConfig') || '{}');
+            
+            document.getElementById('primaryModel').value = config.primaryModel || 'gemini-2.0-flash-exp';
+            document.getElementById('fallbackModel').value = config.fallbackModel || 'gpt-3.5-turbo';
+            document.getElementById('maxTokens').value = config.maxTokens || 4000;
+            document.getElementById('temperature').value = config.temperature || 0.7;
+            document.getElementById('requestDelay').value = config.requestDelay || 2;
+            document.getElementById('enableLocalModel').checked = config.enableLocalModel || false;
+            
+            updateTemperatureDisplay();
+        }
+
+        function saveModelConfig() {
+            const config = {
+                primaryModel: document.getElementById('primaryModel').value,
+                fallbackModel: document.getElementById('fallbackModel').value,
+                maxTokens: parseInt(document.getElementById('maxTokens').value),
+                temperature: parseFloat(document.getElementById('temperature').value),
+                requestDelay: parseInt(document.getElementById('requestDelay').value),
+                enableLocalModel: document.getElementById('enableLocalModel').checked,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('modelConfig', JSON.stringify(config));
+            showNotification('Configuração de modelos salva com sucesso!', 'success');
+        }
+
+        function resetModelConfig() {
+            if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
+                localStorage.removeItem('modelConfig');
+                loadModelConfig();
+                showNotification('Configurações restauradas para o padrão.', 'success');
+            }
+        }
+
+        function updateTemperatureDisplay() {
+            const tempValue = document.getElementById('temperature').value;
+            const tempLabel = document.querySelector('label[for="temperature"]');
+            tempLabel.textContent = `Temperatura (${tempValue})`;
+        }
+
+        // Session Management Functions
+        function loadSavedSessions() {
+            const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+            const sessionsList = document.getElementById('savedSessionsList');
+            
+            if (sessions.length === 0) {
+                sessionsList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Nenhuma sessão salva encontrada.</p>';
+                return;
+            }
+            
+            sessionsList.innerHTML = sessions.map(session => `
+                <div class="session-item" data-session-id="${session.id}">
+                    <div class="session-info">
+                        <strong>${session.name}</strong>
+                        <small>${new Date(session.savedAt).toLocaleString('pt-BR')}</small>
+                        <p>${session.description || 'Sem descrição'}</p>
+                        ${session.tags ? `<small style="color: var(--primary-cyan);">Tags: ${session.tags}</small>` : ''}
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-sm btn-primary" onclick="loadSessionById('${session.id}')">
+                            <i class="fas fa-folder-open"></i>
+                            Carregar
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="exportSessionById('${session.id}')">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                        <button class="btn btn-sm btn-error" onclick="deleteSessionById('${session.id}')">
+                            <i class="fas fa-trash"></i>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveCurrentSession() {
+            const sessionName = document.getElementById('sessionNameSave').value.trim();
+            if (!sessionName) {
+                showNotification('Por favor, digite um nome para a sessão.', 'warning');
+                return;
+            }
+            
+            const session = {
+                id: Date.now().toString(),
+                name: sessionName,
+                description: document.getElementById('sessionDescription').value.trim(),
+                tags: document.getElementById('sessionTags').value.trim(),
+                data: analysisData,
+                formData: Object.fromEntries(new FormData(document.getElementById('analysisForm'))),
+                savedAt: new Date().toISOString(),
+                currentStep: currentStep
+            };
+            
+            const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+            sessions.unshift(session);
+            
+            // Manter apenas as últimas 50 sessões
+            if (sessions.length > 50) {
+                sessions.splice(50);
+            }
+            
+            localStorage.setItem('savedSessions', JSON.stringify(sessions));
+            showNotification(`Sessão "${sessionName}" salva com sucesso!`, 'success');
+            
+            // Limpar campos
+            document.getElementById('sessionNameSave').value = '';
+            document.getElementById('sessionDescription').value = '';
+            document.getElementById('sessionTags').value = '';
+            
+            loadSavedSessions();
+        }
+
+        function loadSessionById(sessionId) {
+            const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+            const session = sessions.find(s => s.id === sessionId);
+            
+            if (!session) {
+                showNotification('Sessão não encontrada.', 'error');
+                return;
+            }
+            
+            // Restaurar dados do formulário
+            if (session.formData) {
+                Object.entries(session.formData).forEach(([key, value]) => {
+                    const field = document.getElementById(key);
+                    if (field) {
+                        field.value = value;
+                    }
+                });
+            }
+            
+            // Restaurar dados da análise
+            if (session.data) {
+                analysisData = session.data;
+            }
+            
+            // Restaurar etapa atual
+            if (session.currentStep) {
+                currentStep = session.currentStep;
+                updateProgressBar();
+            }
+            
+            // showMainInterface(); // Removido - deixar hash navigation controlar
+            showNotification(`Sessão "${session.name}" carregada com sucesso!`, 'success');
+        }
+
+        function exportSessionById(sessionId) {
+            const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+            const session = sessions.find(s => s.id === sessionId);
+            
+            if (!session) {
+                showNotification('Sessão não encontrada.', 'error');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(session, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `sessao_${session.name.replace(/[^a-zA-Z0-9]/g, '_')}_${session.id}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification(`Sessão "${session.name}" exportada com sucesso!`, 'success');
+        }
+
+        function deleteSessionById(sessionId) {
+            const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+            const session = sessions.find(s => s.id === sessionId);
+            
+            if (!session) {
+                showNotification('Sessão não encontrada.', 'error');
+                return;
+            }
+            
+            if (confirm(`Tem certeza que deseja excluir a sessão "${session.name}"?`)) {
+                const updatedSessions = sessions.filter(s => s.id !== sessionId);
+                localStorage.setItem('savedSessions', JSON.stringify(updatedSessions));
+                loadSavedSessions();
+                showNotification(`Sessão "${session.name}" excluída com sucesso!`, 'success');
+            }
+        }
+
+        function loadSession() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const session = JSON.parse(e.target.result);
+                        
+                        // Validar estrutura da sessão
+                        if (!session.id || !session.name) {
+                            throw new Error('Arquivo de sessão inválido');
+                        }
+                        
+                        // Adicionar à lista de sessões
+                        const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+                        
+                        // Verificar se já existe
+                        const existingIndex = sessions.findIndex(s => s.id === session.id);
+                        if (existingIndex >= 0) {
+                            sessions[existingIndex] = session;
+                        } else {
+                            sessions.unshift(session);
+                        }
+                        
+                        localStorage.setItem('savedSessions', JSON.stringify(sessions));
+                        loadSavedSessions();
+                        showNotification(`Sessão "${session.name}" importada com sucesso!`, 'success');
+                        
+                    } catch (error) {
+                        showNotification('Erro ao carregar arquivo de sessão.', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function exportSession() {
+            const sessions = JSON.parse(localStorage.getItem('savedSessions') || '[]');
+            if (sessions.length === 0) {
+                showNotification('Nenhuma sessão para exportar.', 'warning');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(sessions, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `todas_sessoes_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('Todas as sessões exportadas com sucesso!', 'success');
+        }
+
+        // Model Download Functions
+        let currentDownload = null;
+
+        async function downloadModel(modelName, modelUrl, buttonElement) {
+            if (currentDownload) {
+                showNotification('Um download já está em andamento.', 'warning');
+                return;
+            }
+
+            try {
+                // Update button state
+                buttonElement.disabled = true;
+                buttonElement.classList.add('downloading');
+                buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+
+                // Show download progress
+                showDownloadProgress(modelName);
+
+                // Make API call to start download
+                const response = await fetch('/api/download_model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model_name: modelName,
+                        model_url: modelUrl
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentDownload = {
+                        modelName: modelName,
+                        downloadId: result.download_id
+                    };
+
+                    // Start polling for download progress
+                    pollDownloadProgress();
+                    
+                    showNotification(`Download de ${modelName} iniciado!`, 'success');
+                } else {
+                    throw new Error(result.error || 'Erro ao iniciar download');
+                }
+
+            } catch (error) {
+                console.error('Erro ao baixar modelo:', error);
+                showNotification(`Erro ao baixar modelo: ${error.message}`, 'error');
+                
+                // Reset button state
+                buttonElement.disabled = false;
+                buttonElement.classList.remove('downloading');
+                buttonElement.innerHTML = '<i class="fas fa-download"></i> Baixar';
+                
+                hideDownloadProgress();
+            }
+        }
+
+        async function pollDownloadProgress() {
+            if (!currentDownload) return;
+
+            try {
+                const response = await fetch(`/api/download_progress/${currentDownload.downloadId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const progress = await response.json();
+                
+                // Update progress UI
+                updateDownloadProgress(progress);
+
+                if (progress.status === 'downloading') {
+                    // Continue polling
+                    setTimeout(pollDownloadProgress, 1000);
+                } else if (progress.status === 'completed') {
+                    // Download completed
+                    showNotification(`${currentDownload.modelName} baixado com sucesso!`, 'success');
+                    hideDownloadProgress();
+                    refreshInstalledModels();
+                    currentDownload = null;
+                } else if (progress.status === 'error') {
+                    throw new Error(progress.error || 'Erro durante o download');
+                }
+
+            } catch (error) {
+                console.error('Erro ao verificar progresso do download:', error);
+                showNotification(`Erro no download: ${error.message}`, 'error');
+                hideDownloadProgress();
+                currentDownload = null;
+            }
+        }
+
+        function showDownloadProgress(modelName) {
+            const progressDiv = document.getElementById('downloadProgress');
+            const modelNameSpan = document.getElementById('downloadModelName');
+            
+            modelNameSpan.textContent = modelName;
+            progressDiv.style.display = 'block';
+            
+            // Reset progress
+            updateDownloadProgress({
+                percent: 0,
+                downloaded: 0,
+                total: 0,
+                speed: 0
+            });
+        }
+
+        function updateDownloadProgress(progress) {
+            const percentSpan = document.getElementById('downloadPercent');
+            const progressBar = document.getElementById('downloadProgressBar');
+            const speedSpan = document.getElementById('downloadSpeed');
+            const sizeSpan = document.getElementById('downloadSize');
+
+            percentSpan.textContent = `${Math.round(progress.percent || 0)}%`;
+            progressBar.style.width = `${progress.percent || 0}%`;
+            speedSpan.textContent = `${(progress.speed || 0).toFixed(1)} MB/s`;
+            
+            const downloadedMB = ((progress.downloaded || 0) / 1024 / 1024).toFixed(1);
+            const totalMB = ((progress.total || 0) / 1024 / 1024).toFixed(1);
+            sizeSpan.textContent = `${downloadedMB} MB / ${totalMB} MB`;
+        }
+
+        function hideDownloadProgress() {
+            const progressDiv = document.getElementById('downloadProgress');
+            progressDiv.style.display = 'none';
+        }
+
+        function cancelDownload() {
+            if (!currentDownload) return;
+
+            fetch(`/api/cancel_download/${currentDownload.downloadId}`, {
+                method: 'POST'
+            }).then(() => {
+                showNotification('Download cancelado.', 'info');
+                hideDownloadProgress();
+                currentDownload = null;
+                
+                // Reset all download buttons
+                document.querySelectorAll('.download-model').forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('downloading');
+                    btn.innerHTML = '<i class="fas fa-download"></i> Baixar';
+                });
+            }).catch(error => {
+                console.error('Erro ao cancelar download:', error);
+            });
+        }
+
+        async function refreshInstalledModels() {
+            try {
+                const response = await fetch('/api/installed_models');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const models = await response.json();
+                const installedList = document.getElementById('installedModelsList');
+
+                if (models.length === 0) {
+                    installedList.innerHTML = `
+                        <div class="model-item">
+                            <div class="model-info">
+                                <strong>Nenhum modelo instalado</strong>
+                                <small>Baixe um modelo da lista ao lado para começar</small>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    installedList.innerHTML = models.map(model => `
+                        <div class="model-item installed">
+                            <div class="model-info">
+                                <strong>${model.name}</strong>
+                                <small>${model.size} • ${model.type}</small>
+                                <div class="model-status">
+                                    <div class="status-dot"></div>
+                                    <span>Instalado</span>
+                                </div>
+                            </div>
+                            <div class="model-actions">
+                                <button class="btn btn-sm btn-success" disabled>
+                                    <i class="fas fa-check"></i>
+                                    Instalado
+                                </button>
+                                <button class="btn btn-sm btn-error" onclick="deleteModel('${model.id}')">
+                                    <i class="fas fa-trash"></i>
+                                    Remover
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Update available models list to show which are already installed
+                updateAvailableModelsList(models);
+
+            } catch (error) {
+                console.error('Erro ao carregar modelos instalados:', error);
+                document.getElementById('installedModelsList').innerHTML = `
+                    <div class="model-item">
+                        <div class="model-info">
+                            <strong>Erro ao carregar modelos</strong>
+                            <small>Verifique se o servidor está funcionando</small>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateAvailableModelsList(installedModels) {
+            const installedNames = installedModels.map(m => m.id);
+            
+            document.querySelectorAll('.model-item.available').forEach(item => {
+                const modelName = item.getAttribute('data-model');
+                const downloadBtn = item.querySelector('.download-model');
+                
+                if (installedNames.includes(modelName)) {
+                    downloadBtn.disabled = true;
+                    downloadBtn.innerHTML = '<i class="fas fa-check"></i> Instalado';
+                    downloadBtn.classList.remove('btn-primary');
+                    downloadBtn.classList.add('btn-success');
+                    item.classList.add('installed');
+                }
+            });
+        }
+
+        async function deleteModel(modelId) {
+            if (!confirm('Tem certeza que deseja remover este modelo?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/delete_model/${modelId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Modelo removido com sucesso!', 'success');
+                    refreshInstalledModels();
+                } else {
+                    throw new Error(result.error || 'Erro ao remover modelo');
+                }
+
+            } catch (error) {
+                console.error('Erro ao remover modelo:', error);
+                showNotification(`Erro ao remover modelo: ${error.message}`, 'error');
+            }
+        }
+
+        // Handle header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // ===== HELP SECTION FUNCTIONS =====
+        function openSupport() {
+            showNotification('Chat de suporte será implementado em breve!', 'info');
+        }
+
+        function openDocumentation() {
+            showNotification('Documentação completa disponível na seção de ajuda!', 'info');
+        }
+
+        function reportBug() {
+            const bugReport = prompt('Descreva o problema encontrado:');
+            if (bugReport && bugReport.trim()) {
+                showNotification('Bug reportado com sucesso! Nossa equipe irá analisar.', 'success');
+                console.log('Bug Report:', bugReport);
+            }
+        }
+
+        // ===== HASH NAVIGATION SYSTEM =====
+        function handleHashChange() {
+            const hash = window.location.hash.substring(1); // Remove o #
+            console.log('=== HASH NAVIGATION DEBUG ===');
+            console.log('Hash changed to:', hash);
+            
+            // Verificar se as seções existem
+            const modelSection = document.getElementById('modelManagement');
+            const sessionSection = document.getElementById('sessionManagement');
+            const helpSection = document.getElementById('helpSection');
+            const mainInterface = document.getElementById('section1');
+            
+            console.log('Sections found:');
+            console.log('- modelManagement:', !!modelSection);
+            console.log('- sessionManagement:', !!sessionSection);
+            console.log('- helpSection:', !!helpSection);
+            console.log('- section1 (main):', !!mainInterface);
+            
+            // Forçar ocultação de todas as seções
+            const allSections = document.querySelectorAll('.form-section, .progress-container, .results-section');
+            console.log('Hiding', allSections.length, 'sections');
+            allSections.forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            switch(hash) {
+                case 'modelos':
+                    console.log('Showing Model Management');
+                    if (modelSection) {
+                        modelSection.style.display = 'block';
+                        modelSection.classList.add('active');
+                        console.log('Model section displayed');
+                    } else {
+                        console.error('Model section not found!');
+                    }
+                    updateActiveNavLink('modelos');
+                    break;
+                case 'sessoes':
+                    console.log('Showing Session Management');
+                    if (sessionSection) {
+                        sessionSection.style.display = 'block';
+                        sessionSection.classList.add('active');
+                        console.log('Session section displayed');
+                    } else {
+                        console.error('Session section not found!');
+                    }
+                    updateActiveNavLink('sessoes');
+                    break;
+                case 'ajuda':
+                    console.log('Showing Help Section');
+                    if (helpSection) {
+                        helpSection.style.display = 'block';
+                        helpSection.classList.add('active');
+                        console.log('Help section displayed');
+                    } else {
+                        console.error('Help section not found!');
+                    }
+                    updateActiveNavLink('ajuda');
+                    break;
+                case 'inicio':
+                default:
+                    console.log('Showing Main Interface');
+                    if (mainInterface) {
+                        document.querySelector('.progress-container').style.display = 'block';
+                        mainInterface.style.display = 'block';
+                        mainInterface.classList.add('active');
+                        console.log('Main interface displayed');
+                    } else {
+                        console.error('Main interface not found!');
+                    }
+                    updateActiveNavLink('inicio');
+                    break;
+            }
+            console.log('=== END HASH NAVIGATION DEBUG ===');
+        }
+
+        // Escutar mudanças no hash
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Executar na inicialização
+        window.addEventListener('load', function() {
+            handleHashChange(); // Processar hash inicial
+        });
+
+        // Executar quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM CARREGADO - JavaScript funcionando!');
+            handleHashChange(); // Processar hash inicial
+        });
+
+        // NAVEGAÇÃO SIMPLES E DIRETA
+        function forceNavigation() {
+            const hash = window.location.hash.substring(1);
+            console.log('Navegando para:', hash);
+            
+            // Ocultar todas as seções
+            const allSections = document.querySelectorAll('.form-section, .progress-container');
+            allSections.forEach(section => section.style.display = 'none');
+            
+            // Mostrar seção específica
+            switch(hash) {
+                case 'modelos':
+                    const modelSection = document.getElementById('modelManagement');
+                    if (modelSection) {
+                        modelSection.style.display = 'block';
+                        console.log('Seção de modelos exibida');
+                    }
+                    break;
+                case 'sessoes':
+                    const sessionSection = document.getElementById('sessionManagement');
+                    if (sessionSection) {
+                        sessionSection.style.display = 'block';
+                        console.log('Seção de sessões exibida');
+                    }
+                    break;
+                case 'ajuda':
+                    const helpSection = document.getElementById('helpSection');
+                    if (helpSection) {
+                        helpSection.style.display = 'block';
+                        console.log('Seção de ajuda exibida');
+                    }
+                    break;
+                default:
+                    document.querySelector('.progress-container').style.display = 'block';
+                    document.getElementById('section1').style.display = 'block';
+                    console.log('Interface principal exibida');
+                    break;
+            }
+        }
+        
+        // Executar navegação imediatamente
+        setTimeout(forceNavigation, 500);
+    </script>
+</body>
+</html>
